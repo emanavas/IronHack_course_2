@@ -1,0 +1,99 @@
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Stock App</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+            <a class="nav-link active" href="/">Home</a>
+            </li>
+        </ul>
+        <div class="d-flex">
+            <div class="dropdown">
+            <button class="btn btn-outline-light dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown">
+                <i class="bi bi-person-circle me-1"></i>
+                <%- locals.session?.user || 'Guest' -%>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+                <% if (locals.session?.user) { %>
+                    <li><a class="dropdown-item" href="/api/users/logout">Logout</a></li>
+                    <li><a class="dropdown-item <%- locals.session?.user ? '' : 'disabled' -%>" href="#">Profile</a></li>
+                    <li><a class="dropdown-item <%- locals.session?.user ? '' : 'disabled' -%>" href="#">Settings</a></li>
+                <% } else { %>
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">Login</a></li>
+                    <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#registerModal">Register</a></li>
+                <% } %>
+            </ul>
+            </div>
+        </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Login</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <form id="loginForm">
+        <div class="mb-3">
+            <label for="loginUser" class="form-label">User</label>
+            <input type="text" class="form-control" id="loginUser" required>
+        </div>
+        <div class="mb-3">
+            <label for="loginPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="loginPassword" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+        </form>
+    </div>
+    </div>
+</div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1">
+<div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title">Register</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    </div>
+    <div class="modal-body">
+        <form id="registerForm">
+        <div class="mb-3">
+            <label for="registerName" class="form-label">Name</label>
+            <input type="text" class="form-control" id="registerName" required>
+        </div>
+        <div class="mb-3">
+            <label for="registerUser" class="form-label">User</label>
+            <input type="text" class="form-control" id="registerUser" required>
+        </div>
+        <div class="mb-3">
+            <label for="registerPassword" class="form-label">Password</label>
+            <input type="password" class="form-control" id="registerPassword" required>
+        </div>
+        <div class="mb-3">
+            <label for="registerConfirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="registerConfirmPassword" required>
+        </div>
+        <div class="mb-3">
+            <label for="registerRole" class="form-label">Role</label>
+            <select class="form-select" id="registerRole" required>
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+    </div>
+    </div>
+</div>
+</div>
