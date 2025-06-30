@@ -18,6 +18,7 @@ app.use(express.static(path.join(__dirname, './../public')));
 
 
 //use session express
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+//app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}))
+app.use(session({ secret: 'keyboard cat'}))
 
 module.exports = {app, router, session};

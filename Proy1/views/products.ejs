@@ -48,12 +48,12 @@
                   <p class="card-text">Price: $<%= product.price/100 %></p>
                   <p class="card-text">Stock: <%= product.stock %></p>
                   <button class="btn btn-sm btn-primary edit-product-btn <%- locals?.session?.admin == true ? '' : 'disabled' -%>" data-id="<%= product.id %>">
-                    <a href="/product/edit/<%= product.id %>">
+                    <a href="/products/edit/<%= product.id %>">
                       <i class="bi bi-pencil-square"></i>Edit
                     </a>
                   </button>
                   <button class="btn btn-sm btn-danger delete-product-btn <%- locals?.session?.admin == true ? '' : 'disabled' -%>" data-id="<%= product.id %>">
-                    <a href="/product/delete/<%= product.id %>">
+                    <a href="/products/delete/<%= product.id %>">
                       <i class="bi bi-trash"></i>Delete
                     </a>
                   </button>
