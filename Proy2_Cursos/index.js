@@ -7,7 +7,7 @@ const {mw_check_session} = require("#root/config/middleware.js")
 //init database
 const db = require("#root/config/db.js")
 
-const port = 3000;
+const port = 3002;
 
 
 config.app.use(mw_check_session)
