@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container">
+    <a class="navbar-brand" href="/">Catálogo Cursos</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/cursos">Cursos</a>
+        </li>
+        <% if (!session.user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/registro">Registro</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Iniciar Sesión</a>
+          </li>
+        <% } %>
+      </ul>
+      <ul class="navbar-nav">
+        <% if (session.user) { %>
+          <li class="nav-item">
+            <a class="nav-link" href="/perfil">Perfil (<%= session.user.nombre %>)</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/logout">Cerrar Sesión</a>
+          </li>
+          <% if (session.admin) { %>
+            <li class="nav-item"><a class="nav-link" href="/cursos/admin">Admin</a></li>
+          <% } %>
+        <% } %>
+      </ul>
+    </div>
+  </div>
+</nav>

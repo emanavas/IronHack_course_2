@@ -1,0 +1,26 @@
+{
+  "name": "proy2-cursos",
+  "version": "1.0.0",
+  "description": "Gestión de Cursos con Express y EJS",
+  "main": "index.js",
+  "imports": {
+    "#root/*.js": "./*.js",
+    "#config/*.js": "./config/*.js"
+  },
+  "license": "ISC",
+  "author": "Emanuel Navas",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.18.1",
+    "express-validator": "^7.2.1",
+    "jsonwebtoken": "^9.0.2",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.7",
+    "uuid": "^11.1.0"
+  }
+}

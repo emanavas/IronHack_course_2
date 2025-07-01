@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nuevo Curso</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+  <%- include('../partials/navbar') %>
+
+  <main class="container my-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <h1 class="mb-4">Nuevo Curso</h1>
+
+        <% if (errors && errors.length > 0) { %>
+          <div class="alert alert-danger">
+            <ul>
+              <% errors.forEach(error => { %>
+                <li><%= error.msg %></li>
+              <% }) %>
+            </ul>
+          </div>
+        <% } %>
+
+        <form action="/cursos/admin/nuevo" method="POST">
+          <div class="mb-3">
+            <label for="titulo" class="form-label">Título</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" value="<%= oldData.titulo || '' %>" required>
+          </div>
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required><%= oldData.descripcion || '' %></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="categoria" class="form-label">Categoría</label>
+            <select class="form-select" id="categoria" name="categoria" required>
+              <option value="" <%= !oldData.categoria ? 'selected' : '' %>>Seleccionar categoría</option>
+              <option value="Programación" <%= oldData.categoria === 'Programación' ? 'selected' : '' %>>Programación</option>
+              <option value="Diseño" <%= oldData.categoria === 'Diseño' ? 'selected' : '' %>>Diseño</option>
+              <option value="Marketing" <%= oldData.categoria === 'Marketing' ? 'selected' : '' %>>Marketing</option>
+              <option value="Negocios" <%= oldData.categoria === 'Negocios' ? 'selected' : '' %>>Negocios</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Visibilidad</label>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="visibilidad" id="publico" value="publico" <%= oldData.visibilidad !== 'privado' ? 'checked' : '' %>>
+              <label class="form-check-label" for="publico">
+                Público
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="visibilidad" id="privado" value="privado" <%= oldData.visibilidad === 'privado' ? 'checked' : '' %>>
+              <label class="form-check-label" for="privado">
+                Privado
+              </label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar Curso</button>
+          <a href="/cursos/admin" class="btn btn-outline-secondary ms-2">Cancelar</a>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <%- include('../partials/footer') %>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
