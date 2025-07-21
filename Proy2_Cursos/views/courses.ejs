@@ -11,19 +11,30 @@
   <%- include('partials/navbar') %>
 
   <main class="container my-5">
-    <h1 class="mb-4">Cursos Disponibles</h1>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="mb-0">Cursos Disponibles</h1>
+        <a href="/courses/new" class="btn btn-success">Añadir Curso</a>
+    </div>
+
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-      <% if (locals?.cursos && locals?.cursos.length > 0) { %>
-        <% cursos.forEach(curso => { %>
+      <% if (locals?.courses && locals?.courses.length > 0) { %>
+        <% courses.forEach(course => { %>
           <div class="col">
             <div class="card h-100">
               <div class="card-body">
-                <h5 class="card-title"><%= curso.titulo %></h5>
-                <p class="card-text"><%= curso.descripcion %></p>
-                <span class="badge bg-info text-dark"><%= curso.categoria %></span>
+                <h5 class="card-title"><%= course.title %></h5>
+                <p class="card-text"><%= course.description %></p>
+                <span class="badge bg-info text-dark"><%= course.category %></span>
+              </div>
+              <div class="card-footer d-flex justify-content-end">
+                <a href="/courses/edit/<%= course._id %>" class="btn btn-primary btn-sm me-2">Editar</a>
+                <form action="/courses/delete/<%= course._id %>?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
               </div>
             </div>
-          </div>
+          </div> 
+              
         <% }) %>
       <% } else { %>
         <div class="col">

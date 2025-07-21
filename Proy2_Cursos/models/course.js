@@ -3,30 +3,37 @@ const { DataTypes } = require('sequelize');
 // Definimos el modelo como una función que recibe la instancia de sequelize
 module.exports = (sequelize) => {
   // sequelize.define(nombreModelo, atributos, opciones)
-  const Curso = sequelize.define('Curso', {
+  const Course = sequelize.define('course', {
     // No es necesario definir 'id', Sequelize lo añade automáticamente
     // como PRIMARY KEY AUTOINCREMENT
-    titulo: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false // Equivale a NOT NULL
     },
-    descripcion: {
+    description: {
       type: DataTypes.TEXT,
       allowNull: false
     },
-    categoria: {
+    category: {
       type: DataTypes.STRING,
       allowNull: false
     },
-    visibilidad: {
-      type: DataTypes.STRING,
+    is_public: {
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: 'publico' // Valor por defecto
-    }
+      defaultValue: true // Valor por defecto
+    },
+    image: {
+      type: DataTypes.BLOB,
+      allowNull: true
+    },
+
+    //foreignKey
+    // userId
   }, {
-    tableName: 'cursos', // Nos aseguramos que el nombre de la tabla sea 'cursos'
-    timestamps: false // No esperamos las columnas createdAt y updatedAt
+    tableName: 'courses', // Nos aseguramos que el nombre de la tabla sea 'cursos'
+    //timestamps: false // No esperamos las columnas createdAt y updatedAt
   });
 
-  return Curso;
+  return Course;
 };

@@ -5,40 +5,65 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config()
 
 
+const decodeToken = (token) => {
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET);
+        return decoded
+    } catch (error) {
+        return null
+    }
+}
+
+
 const mw_check_session = async (req, res, next) => {
     try {
         if (req?.session?.token){
-            const token = req.session.token
-            const token_data = jwt.verify(token, process.env.TOKEN_SECRET)
-            req.token = token_data
-            
-            //modify session
-            req.session.user = token_data.name
-            req.session.admin = token_data.admin
-            req.session.save()
-        } 
-        next()
-            
+            const token_data = decodeToken(req.session.token)
+            //check token
+            if (!token_data){
+                req.session.destroy()
+                console('token invalido')
+            }else{
+                req.session.token_data = token_data
+                req.session.touch()
+            }
+        }
+        if (!req?.session) {
+            req.session = await session.create()
+        }
     } catch (error) {
         console.warning(error)
+    } finally {
+        next()
     }
-    
 };
+
 
 // --- Middleware de autorización ---
 // Verifica si el usuario en la sesión es un administrador
 const isAdmin = (req, res, next) => {
-    if (req.session && req.session.admin) {
-        return next();
+    try {
+        if (req?.session?.token) {
+            const token_data = decodeToken(req.session.token);
+            if (token_data && token_data.admin) {
+                return next();
+            }
+        }else{
+            // res.status(403).json({ 
+            //     message: 'Access denied'
+            // });
+            res.render('login', {
+                session: req.session,
+                errors: 'Access denied, please login as Administrator.'
+            })
+        }
+    } catch (error) {
+        res.status(500).json(error.message);
     }
-    res.status(403).render('error', { 
-        message: 'Acceso Denegado', 
-        error: { status: 403, stack: 'No tienes permisos de administrador para acceder a esta página.' },
-        session: req.session
-    });
+    
 };
 
 
 module.exports = {
-    mw_check_session,isAdmin
-}
+    mw_check_session,isAdmin,decodeToken
+};

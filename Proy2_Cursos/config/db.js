@@ -14,18 +14,22 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 // Importar el modelo 'Curso' y añadirlo al objeto db
-db.cursos = require('../models/curso.js')(sequelize);
-// ... aquí importarías otros modelos si los tuvieras (ej. db.usuarios)
+db.courses = require('../models/course.js')(sequelize);
+// Importar el modelo 'User' (desde el archivo estandarizado) y añadirlo al objeto db
+db.users = require('../models/user.js')(sequelize);
 
-// 3. Sincronizar la base de datos (opcional, útil para desarrollo)
-// Esto crea o modifica las tablas para que coincidan con los modelos.
-sequelize.sync({ alter: true })
-  .then(() => {
-    console.log('Base de datos y tablas sincronizadas con Sequelize.');
-  })
-  .catch(err => {
-    console.error('Error al sincronizar la base de datos:', err);
-  });
+// 3. Definir las asociaciones entre modelos
+const { users, courses } = db;
+
+
+// Un usuario puede estar inscrito en muchos cursos.
+users.belongsToMany(courses, { through: 'UserCourses', foreignKey: 'userId' });
+
+// Un curso puede tener muchos estudiantes inscritos.
+courses.belongsToMany(users, { through: 'UserCourses', foreignKey: 'courseId' });
+
+
+courses.belongsTo(users, { foreignKey: 'userId' });
 
 // 4. Exportar la conexión y los modelos para usarlos en otras partes de la app
 module.exports = db;

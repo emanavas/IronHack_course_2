@@ -2,94 +2,86 @@
 const config = require("#config/main_config.js")
 const path = require('path');
 const db = require("#root/config/db.js")
-const { query } = require('express-validator');
+const { body, validationResult } = require('express-validator');
 const uuid = require('uuid')
 const jwt = require('jsonwebtoken');
 
+const { users } = db; // Usar el modelo de Sequelize
 
 
 config.router.post("/api/users/register", 
     //validators 
-    query('name').notEmpty().trim().isAscii(),
-    query('user').notEmpty().trim().isAscii(),
-    query('password').notEmpty().isAscii(),
-    query('role').notEmpty().isAscii().custom((value, { req }) => {
-        return value.toLowerCase();
-    }).isIn(['admin', 'user']),
+    body('name').notEmpty().trim().isAscii(),
+    body('user').notEmpty().trim().isAscii(),
+    body('password').notEmpty().isAscii(),
+    body('role').optional().isAscii().custom((value) => value.toLowerCase()).isIn(['admin', 'user']),
     async (req, res) => {
     
-    const name = req.body.name
-    const user = req.body.user
-    const password = req.body.password
-    const role = req.body.role
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { name, user, password, role } = req.body;
 
     //actions
     try {
-        await db.run("INSERT INTO users (name, user, password, role) VALUES (?, ?, ?, ?)", [name, user, password, role]);
-        console.log('Data inserted successfully');
-        req.session.user = name
-        req.session.admin = role === 'admin' ? true : false
-        req.session.save()
+        const newUser = await users.create({ name, user, password, role });
+        console.log('Usuario insertado correctamente');
+        req.session.user = newUser.name;
+        req.session.admin = newUser.role === 'admin';
+        req.session.save();
 
         //response
-        res.send({name:name})
+        res.status(201).send({name: newUser.name});
     } catch (error) {
-        res.status(500).send(error);
-        console.error('Error inserting data:', error)
+        // Manejar error de unicidad de usuario
+        if (error.name === 'SequelizeUniqueConstraintError') {
+            return res.status(409).send({ message: 'El usuario ya existe.' });
+        }
+        res.status(500).send({ message: 'Error al registrar el usuario', error });
+        console.error('Error al insertar datos:', error);
     }
 })
 
 
 config.router.post("/api/users/login", 
     //validators 
-    query('user').notEmpty().trim().isAscii(),
-    query('password').notEmpty().isAscii(),
+    body('user').notEmpty().trim().isAscii(),
+    body('password').notEmpty().isAscii(),
     async (req, res) => {
     
-    const user = req.body.user
-    const password = req.body.password
+    const { user, password } = req.body;
 
     //actions
     try {
-        let querry_res = null
-        await new Promise((resolve, reject) => {
-            db.get("SELECT * FROM users WHERE user = ? AND password = ?", [user, password], (err, row) => {
-                if (err) {
-                    res.status(500).send(err);
-                    console.error('Error retrieving data:', err);
-                    reject(err)
-                    throw new Error(err);     
-                }
-                if (row) {
-                    querry_res = row
+        const foundUser = await users.findOne({ where: { user: user, password: password } });
+        
+        if (foundUser) {
+            //create token
+            const token = jwt.sign({
+                name: foundUser.name,
+                admin: foundUser.role === 'admin',
+            }, process.env.TOKEN_SECRET);
 
-                    //create token
-                    const token = jwt.sign({
-                        name: row.name,
-                        admin: row.role === 'admin' ? true : false,
-                    }, process.env.TOKEN_SECRET)
-                    req.session.user = row.name
-                    req.session.admin = row.role === 'admin' ? true : false
-                    req.session.token = token
-                    req.session.save();
-                    resolve("ok")
-                }
-            });
-        }); 
-        //response
-        res.send({name:querry_res?.name})
+            req.session.user = foundUser.name;
+            req.session.admin = foundUser.role === 'admin';
+            req.session.token = token;
+            req.session.save();
+            
+            return res.status(200).send({ name: foundUser.name });
+        } else {
+            return res.status(401).send({ message: 'Usuario o contraseña incorrectos.' });
+        }
     } catch (error) {
-        res.status(500).send(error);
-        console.error('Error inserting data:', error)
+        console.error('Error en el login:', error);
+        res.status(500).send({ message: 'Error en el servidor durante el login.' });
     }
 })
 
 config.router.get("/api/users/logout", async (req, res) => {
-        req.session.destroy()
+    req.session.destroy();
     res.redirect('/')
 })
 
 module.exports = config.router;
-
-
-
