@@ -1,58 +1,56 @@
-# IronHack_course_2
+# IronHack Course 2 Monorepo
 
-Este repositorio contiene los proyectos desarrollados durante el segundo módulo del bootcamp de desarrollo web de Ironhack.
+This repository contains three projects from the IronHack web development course, structured as a monorepo using npm workspaces.
 
-## Proyectos
+## Prerequisites
 
-Actualmente, el repositorio incluye los siguientes proyectos:
+- Node.js and npm are required.
 
-1.  **Proy1**: Primer proyecto del módulo.
-2.  **Proy2_Cursos**: Una aplicación para la gestión de cursos.
+## Installation
 
----
+1.  Clone the repository.
+2.  Install the dependencies for all projects by running the following command in the root directory:
 
-### Configuración y Ejecución
-
-A continuación se detallan los pasos para configurar y ejecutar cada proyecto localmente.
-
-#### Proyecto 1: `Proy1`
-
-1.  **Acceder al directorio del proyecto:**
-    ```bash
-    cd Proy1
-    ```
-
-2.  **Instalar dependencias:**
-    Ejecuta el siguiente comando para instalar todos los paquetes de Node.js necesarios.
     ```bash
     npm install
     ```
 
-3.  **Configurar variables de entorno:**
-    Este proyecto utiliza variables de entorno. Crea un archivo `.env` en la raíz del directorio `Proy1` y añade las variables necesarias.
+## Running the Projects
 
-4.  **Iniciar la aplicación:**
+You can run each project individually or all at once.
+
+### Individual Projects
+
+To run a specific project, use the following commands from the root directory:
+
+-   **Project 1:**
+
     ```bash
-    npm start
+    npm run start:proy1
     ```
 
-#### Proyecto 2: `Proy2_Cursos`
+    This project will be available at `http://localhost:3000`.
 
-1.  **Acceder al directorio del proyecto:**
+-   **Project 2:**
+
     ```bash
-    cd Proy2_Cursos
+    npm run start:proy2
     ```
 
-2.  **Instalar dependencias:**
-    Ejecuta el siguiente comando para instalar todos los paquetes de Node.js necesarios.
+    This project will be available at `http://localhost:3002`.
+
+-   **Project 3:**
+
     ```bash
-    npm install
+    npm run start:proy3
     ```
 
-3.  **Configurar variables de entorno:**
-    Al igual que el primer proyecto, este también necesita un archivo `.env`. Créalo en la raíz del directorio `Proy2_Cursos` con la configuración requerida.
+    This project will be available at `http://localhost:3003`.
 
-4.  **Iniciar la aplicación:**
-    ```bash
-    npm start
-    ```
+### All Projects
+
+To run all projects concurrently, use the following command from the root directory:
+
+```bash
+npm run all
+```
