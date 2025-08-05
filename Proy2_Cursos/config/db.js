@@ -18,18 +18,30 @@ db.courses = require('../models/course.js')(sequelize);
 // Importar el modelo 'User' (desde el archivo estandarizado) y añadirlo al objeto db
 db.users = require('../models/user.js')(sequelize);
 
+
+db.user_courses = require('../models/user_courses.js')(sequelize);
+
+
 // 3. Definir las asociaciones entre modelos
-const { users, courses } = db;
+const { users, courses, user_courses } = db;
 
 
-// Un usuario puede estar inscrito en muchos cursos.
-users.belongsToMany(courses, { through: 'UserCourses', foreignKey: 'userId' });
+// Many-to-many for subscriptions:
+// A user can be subscribed to many courses.
+users.belongsToMany(courses, { through: user_courses, foreignKey: 'userId' });
 
-// Un curso puede tener muchos estudiantes inscritos.
-courses.belongsToMany(users, { through: 'UserCourses', foreignKey: 'courseId' });
+// A course can have many subscribed users.
+courses.belongsToMany(users, { through: user_courses, foreignKey: 'courseId' });
 
+// One-to-many for course creation:
+courses.belongsTo(users, { foreignKey: 'userId' }); // A course is created by a user
+users.hasMany(courses, { foreignKey: 'userId' }); // A user can create many courses
 
-courses.belongsTo(users, { foreignKey: 'userId' });
+// Explicit associations to the join table to allow direct queries on it.
+user_courses.belongsTo(users, { foreignKey: 'userId' });
+users.hasMany(user_courses, { foreignKey: 'userId' });
+user_courses.belongsTo(courses, { foreignKey: 'courseId' });
+courses.hasMany(user_courses, { foreignKey: 'courseId' });
 
 // 4. Exportar la conexión y los modelos para usarlos en otras partes de la app
 module.exports = db;

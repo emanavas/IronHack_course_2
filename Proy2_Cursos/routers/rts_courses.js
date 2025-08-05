@@ -1,6 +1,6 @@
 const config = require("#config/main_config.js")
-const { courses } = require("#root/config/db.js"); // Importamos el modelo de Sequelize
-const {isAdmin,decodeToken} = require("#root/config/middleware.js")
+const { users, courses, user_courses } = require("#root/config/db.js"); // Importamos el modelo de Sequelize
+const {isAdmin,decodeToken,only_users} = require("#root/config/middleware.js")
 const { body, validationResult } = require('express-validator');
 const { Op } = require('sequelize');
 const multer = require('multer');
@@ -13,19 +13,35 @@ const upload = multer({ storage: storage });
 
 
 config.router.get("/", async (req, res) => {
-    const token = decodeToken(req.session?.token)
     try {
         // Sequelize: Busca todos los cursos donde is_public sea true
         //check if is register user and create query
+        const token = req.session?.token_data
         let query_builder = [{ is_public:true }]
         if(token?.userId){
-            query_builder.push({ userId: token.userId })
+            query_builder.push({ is_public:false })
         }
-        const allCourses = await courses.findAll({ where: {
-            [Op.or]: query_builder
-        }});
+
+        const allCourses = await courses.findAll({ 
+            include: {
+                model: user_courses,
+                where: {
+                    userId: token?.userId || ''
+                },
+                required: false
+            },
+            where: {
+                [Op.or]: query_builder
+            }
+        });
+
+        // 
+        
         console.log(token)
-        res.render('index', { token: token, courses: allCourses });
+        //get messages
+        const msg_success = req.flash('msg_success')
+        const msg_error = req.flash('msg_error')
+        res.render('index', { token: token, courses: allCourses, session: req.session, msg_success, msg_error });
     } catch (error) {
         console.error(error);
         res.status(500).send("Error al obtener los cursos.");
@@ -81,10 +97,46 @@ config.router.post("/new", isAdmin, upload.single('image'),
 
 //--------------------------------------------------------------------------------------
 
-config.router.get("/admin/nuevo", isAdmin, (req, res) => {
-    res.render('admin/nuevo-curso', { session: req.session, errors: [], oldData: {} });
+
+config.router.get("/subscribe/:courseId", only_users, async (req, res) => {
+    try {
+        const token = req.session?.token_data
+        const { courseId } = req.params;
+
+        //save subsvription of user into db
+        const result = await user_courses.create({
+            userId: token.userId,
+            courseId: courseId
+        })
+        console.log(result)
+        req.flash('msg_success', 'Subscribed successfully!');
+        res.redirect('/courses');
+    } catch (error) {
+        res.status(500).send(`Error ${error.message}`);
+    }
 });
 
+
+config.router.get("/unsubscribe/:courseId", only_users, async (req, res) => {
+    try {
+        const token = req.session?.token_data
+        const { courseId } = req.params;
+
+        //save subsvription of user into db
+        const result = await user_courses.destroy({
+            where: {
+                userId: token.userId,
+                courseId: courseId
+            }
+        })
+        console.log(result)
+        req.flash('msg_success', 'Unsubscribed successfully!');
+        res.redirect('/courses');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send(`Error ${error.message}`);
+    }
+});
 
 
 config.router.get("/admin/editar/:id", isAdmin, async (req, res) => {

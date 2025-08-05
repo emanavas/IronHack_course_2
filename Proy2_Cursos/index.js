@@ -15,6 +15,6 @@ app.use(mw_check_session)
 //setting routers
 app.use("/", require('./routers/rts_login.js'));
 app.use('/courses/', require('./routers/rts_courses.js'));
-//app.use('/users/', require('./routers/rts_users.js'));
+app.use('/users/', require('./routers/rts_users.js'));
 
 module.exports = app;

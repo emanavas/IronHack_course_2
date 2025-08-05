@@ -1,0 +1,573 @@
+1. Introducción
+El presente documento describe el plan para desarrollar una aplicación web de entrega de comida denominada "FoodExpress". El objetivo principal es conectar a clientes hambrientos con restaurantes locales, facilitando el proceso de búsqueda, pedido y entrega de alimentos. Esta plataforma permitirá a los clientes realizar pedidos de manera sencilla y a los restaurantes gestionar sus menús y los pedidos entrantes, con la posibilidad futura de incorporar a repartidores para optimizar las entregas.
+
+2. Objetivos del Proyecto
+Proporcionar una plataforma intuitiva para que los clientes busquen restaurantes y pidan comida.
+Permitir a los restaurantes gestionar sus menús y procesar los pedidos recibidos.
+Ofrecer a los clientes una forma de rastrear el estado de sus pedidos en tiempo real.
+Establecer una base sólida para futuras expansiones, como la gestión de repartidores o sistemas de pago avanzados.
+
+3. Requisitos Funcionales (Adaptados a FoodExpress)
+3.1. Relaciones entre Entidades
+Usuario - Roles: Un usuario puede tener el rol de Cliente, Administrador de Restaurante o Administrador de Plataforma. (Futuro: Repartidor).
+Cliente - Pedido: Un Cliente puede realizar muchos Pedidos.
+Restaurante - Pedido: Un Pedido pertenece únicamente a un Restaurante y a un Cliente.
+Restaurante - Producto: Un Restaurante ofrece muchos Productos (ítems del menú).
+Pedido - Producto: Un Pedido puede contener uno o varios Productos del menú.
+Pedido - Estado de Entrega: Cada Pedido está asociado a un Estado de Entrega que irá cambiando a lo largo del tiempo.
+3.2. Información del Cliente (Rol: Cliente)
+Se almacenará la siguiente información para cada cliente que se registre:
+Nombre y Apellidos.
+Email: Utilizado para el acceso.
+Teléfono: Contacto.
+Dirección(es) de entrega: Para la gestión de pedidos.
+3.3. Información del Restaurante (Rol: Administrador de Restaurante)
+Se almacenará la siguiente información:
+Nombre del Restaurante.
+Email: Para el acceso del administrador del restaurante.
+Teléfono y Dirección.
+Categorías de Comida: (Ej. Sushi, Pizza, Burgers).
+Horarios de Apertura/Cierre.
+Calificación Promedio: (Visualizado en la lista de restaurantes).
+Tiempo Estimado de Entrega: (Visualizado en la lista de restaurantes).
+3.4. Información del Producto (Ítem de Menú)
+Cada producto del menú de un restaurante incluirá:
+Nombre del Producto.
+Descripción.
+Precio.
+Imagen del Producto.
+Categoría del Producto: (Ej. Entrantes, Platos principales, Postres).
+3.5. Información del Pedido
+Cada pedido registrará:
+Fecha y Hora del Pedido.
+Productos del Pedido: Detalle de cada producto (nombre, cantidad, precio unitario).
+Precio Total: Calculado automáticamente en función de los productos y sus cantidades.
+Cliente Asociado: Información del cliente que realizó el pedido.
+Restaurante Asociado: Información del restaurante donde se realizó el pedido.
+Dirección de Entrega del pedido.
+3.6. Estados del Pedido/Entrega
+Los pedidos pasarán por los siguientes estados:
+Pendiente: Estado inicial por defecto al crear un pedido.
+Aceptado (por Restaurante): El restaurante ha confirmado la recepción del pedido.
+En Preparación: El restaurante está preparando la comida.
+Listo para Recoger: La comida está preparada y esperando al repartidor.
+En Camino: El pedido ha sido recogido por el repartidor y está en ruta hacia el cliente.
+Entregado: El pedido ha sido entregado exitosamente al cliente.
+Cancelado: El pedido ha sido anulado por el cliente, el restaurante o el administrador de la plataforma.
+3.7. Información de Pago
+Se mostrará el estado de pago del pedido:
+Pagado: El pago ha sido completado (ej. mediante tarjeta).
+Pendiente de Pago / Pago en Efectivo: Para pagos contra entrega.
+3.8. Roles de Usuario
+3.8.1. Cliente
+Acceso: Inicia sesión con su email y clave.
+Búsqueda: Busca restaurantes por código postal o filtrado por categorías de comida.
+Navegación: Explora menús de diferentes restaurantes.
+Carrito de Compra: Añade y elimina productos del carrito, visualiza el total.
+Realizar Pedido: Completa el proceso de compra.
+Seguimiento: Visualiza el estado actualizado de sus pedidos en tiempo real.
+Historial: Consulta el detalle y estado de pago de sus pedidos anteriores.
+3.8.2. Administrador de Restaurante
+Acceso: Inicia sesión con su email y clave.
+Gestión de Menú: Añade, modifica o elimina productos de su menú.
+Gestión de Pedidos: Visualiza los pedidos entrantes y actualiza el estado del pedido (ej. de Pendiente a En Preparación, o Listo para Recoger).
+Información del Restaurante: Actualiza detalles como horarios, teléfono, etc.
+3.8.3. Administrador de la Plataforma (FoodExpress)
+Gestión de Usuarios: Puede registrar nuevos restaurantes, gestionar cuentas de clientes y restaurantes.
+Gestión de Contenido: Puede gestionar las categorías de comida globales (ej. "Pizza", "Sushi").
+Supervisión de Pedidos: Consulta el historial completo de pedidos de la plataforma.
+Control: Puede anular pedidos si es necesario.
+Reportes: Supervisa los estados de pago y posibles estadísticas.
+3.8.4. Repartidor (Opcional, Fase 2)
+Acceso: Inicia sesión con su email y clave.
+Visualización de Entregas: Ve los pedidos disponibles para entrega.
+Aceptación/Rechazo: Acepta o rechaza pedidos de entrega.
+Actualización de Estado: Actualiza el estado de la entrega (Recogido, En Camino, Entregado).
+
+4. Requisitos Técnicos y Tecnologías
+Las tecnologías clave para el desarrollo del proyecto se mantienen:
+Backend: Node.js con Express.
+Motor de Plantillas: EJS (Embedded JavaScript) para las vistas.
+Base de Datos: MySQL para almacenar todos los datos de la aplicación.
+Validación de Formularios: express-validator para asegurar la integridad de los datos de entrada.
+Variables de Entorno: dotenv para la gestión segura de configuraciones sensibles.
+
+5. Planificación del Proyecto (Metodología Ágil con Sprints)
+Se propone un enfoque de desarrollo ágil, utilizando sprints de 2 semanas de duración.
+5.1. Épicos Principales
+Gestión de Usuarios y Autenticación: Registro, inicio de sesión y perfiles para clientes, restaurantes y administradores.
+Gestión de Restaurantes y Menús: Creación de restaurantes, gestión de categorías de comida y administración de ítems de menú.
+Proceso de Pedido del Cliente: Búsqueda, selección de restaurante, carrito de compra y realización de pedidos.
+Gestión y Seguimiento de Pedidos: Flujo de vida del pedido desde la aceptación hasta la entrega, con actualizaciones de estado.
+Administración de la Plataforma: Herramientas para el control global del sistema por parte del administrador de FoodExpress.
+Sistema de Pagos y Notificaciones: Integración de métodos de pago y envío de notificaciones automáticas.
+Módulo de Repartidores (Fase Posterior): Funcionalidades para la gestión y seguimiento de la entrega por parte de los repartidores.
+5.2. Desglose de Sprints (Ejemplo de Sprints Iniciales)
+Sprint 1: Configuración Inicial y Autenticación Básica (2 Semanas)
+Objetivo: Establecer la base del proyecto y la funcionalidad de autenticación de usuarios.
+Historias de Usuario:
+Como desarrollador, quiero configurar el proyecto Node.js con Express, EJS, MySQL y dotenv para iniciar el desarrollo.
+Como usuario, quiero poder registrarme como
+ Cliente o Administrador de Restaurante para acceder a la plataforma.
+Como usuario registrado, quiero poder iniciar sesión de forma segura con mi email y contraseña.
+Como sistema, quiero almacenar las contraseñas de forma segura usando bcrypt.js.
+Como sistema, quiero gestionar las sesiones de usuario para mantener el estado de autenticación.
+Como usuario, quiero ver la página de inicio de FoodExpress y su navegación principal (Home, How it works, Restaurants, Cart, Sign In, Register).
+Como desarrollador, quiero implementar validaciones básicas con express-validator para los formularios de registro e inicio de sesión.
+Sprint 2: Exploración de Restaurantes y Menús (2 Semanas)
+Objetivo: Permitir a los usuarios explorar restaurantes y sus menús.
+Historias de Usuario:
+Como administrador de plataforma, quiero poder añadir y gestionar categorías de comida (ej. "Pizza", "Sushi", "Hamburguesas").
+Como administrador de restaurante, quiero poder añadir y gestionar los ítems de mi menú (nombre, descripción, precio, imagen).
+Como cliente, quiero poder ver una lista de restaurantes disponibles con su información clave (nombre, categorías, calificación, tiempo de entrega).
+Como cliente, quiero poder filtrar los restaurantes por categorías de comida.
+Como cliente, quiero poder seleccionar un restaurante para ver su menú completo.
+Sprint 3: Carrito de Compras y Pedido Básico (2 Semanas)
+Objetivo: Permitir a los clientes seleccionar productos y realizar un pedido básico.
+Historias de Usuario:
+Como cliente, quiero poder añadir ítems del menú a mi carrito de compra.
+Como cliente, quiero poder ver los ítems en mi carrito y el precio total.
+Como cliente, quiero poder ajustar las cantidades de los ítems en mi carrito o eliminarlos.
+Como cliente, quiero poder proceder al checkout desde el carrito.
+Como cliente, quiero poder ingresar mi dirección de entrega durante el checkout si no está guardada.
+Como cliente, quiero poder confirmar y enviar mi pedido.
+Sprint 4: Gestión de Pedidos por el Restaurante y Seguimiento del Cliente (2 Semanas)
+Objetivo: Habilitar a los restaurantes para gestionar pedidos y a los clientes para seguir su estado.
+Historias de Usuario:
+Como administrador de restaurante, quiero tener un dashboard para ver los pedidos nuevos pendientes.
+Como administrador de restaurante, quiero poder cambiar el estado de un pedido (ej. a "Aceptado", "En Preparación", "Listo para Recoger").
+Como cliente, quiero poder ver el estado actualizado de mi pedido en mi perfil.
+Como cliente, quiero poder ver el historial de mis pedidos anteriores.
+Como sistema, quiero calcular automáticamente el precio total del pedido.
+Como sistema, quiero implementar validaciones con express-validator para los datos de los pedidos.
+
+6. Componentes Clave y Consideraciones Adicionales
+6.1. Base de Datos MySQL
+Diseño de Esquema: Fundamental crear tablas para users (con roles), restaurants, food_categories, menu_items, orders, order_items, delivery_statuses. Se establecerán relaciones robustas (claves primarias y foráneas).
+Conexión: Se recomienda usar un pool de conexiones para gestionar la interacción con MySQL eficientemente desde Node.js. Considerar un ORM como Sequelize para facilitar las operaciones de base de datos y mejorar la seguridad contra inyecciones SQL.
+6.2. Autenticación y Autorización
+Autenticación: Implementación de un sistema de login seguro con bcrypt.js para el hashing de contraseñas y express-session para la gestión de sesiones.
+Autorización: Desarrollo de middleware para controlar el acceso a las rutas según el rol del usuario (Cliente, Administrador de Restaurante, Administrador de Plataforma), asegurando que cada rol solo acceda a las funcionalidades permitidas.
+6.3. Interfaz de Usuario (UI) y Experiencia de Usuario (UX)
+Diseño Responsivo: Es crucial que la aplicación se adapte y funcione correctamente en una variedad de dispositivos (móviles, tabletas, ordenadores).
+Validación de Formularios: Se complementará express-validator en el backend con validaciones en el frontend (HTML5 o JavaScript) para una mejor experiencia de usuario.
+Notificaciones: Mostrar mensajes claros al usuario sobre el éxito o fracaso de sus acciones (ej. "Pedido realizado con éxito", "Error al iniciar sesión").
+6.4. Seguridad
+Prevención de Ataques: Implementar medidas contra CSRF (Cross-Site Request Forgery), XSS (Cross-Site Scripting) y SQL Injection.
+Manejo de Errores: Implementar un manejo de errores robusto para evitar que la aplicación se caiga y proporcionar mensajes útiles.
+6.5. Estructura de Proyecto Propuesta
+Se mantendrá una estructura modular similar a la previamente definida para facilitar la organización del código y el mantenimiento:
+├── config/
+│   ├── db.js             # Configuración de conexión a la base de datos MySQL
+│   └── .env.example      # Ejemplo de archivo .env para variables de entorno
+├── models/
+│   ├── user.js           # Modelo para usuarios (roles)
+│   ├── restaurant.js     # Modelo para restaurantes
+│   ├── menu_item.js      # Modelo para ítems del menú
+│   ├── order.js          # Modelo para pedidos
+│   └── order_item.js     # Modelo para los productos dentro de un pedido
+├── public/
+│   ├── css/              # Hojas de estilo CSS
+│   ├── js/               # Archivos JavaScript del lado del cliente
+│   └── images/           # Imágenes y recursos estáticos
+├── routes/
+│   ├── auth.js           # Rutas de autenticación
+│   ├── clients.js        # Rutas para el cliente
+│   ├── restaurants.js    # Rutas para restaurantes y sus menús
+│   ├── orders.js         # Rutas para la gestión de pedidos
+│   └── admin.js          # Rutas del administrador de la plataforma
+├── views/
+│   ├── auth/             # Vistas de autenticación (login, registro)
+│   ├── client/           # Vistas específicas del cliente (dashboard, historial)
+│   ├── restaurant/       # Vistas específicas del restaurante (gestión de menú, pedidos)
+│   ├── admin/            # Vistas del panel de administración
+│   ├── layouts/          # Plantillas de diseño base (header, footer)
+│   ├── partials/         # Componentes de vista reusables (ej. tarjetas de restaurante)
+│   └── index.ejs         # Página de inicio
+├── app.js                # Archivo principal de la aplicación Express
+├── package.json          # Dependencias y scripts del proyecto
+└── .gitignore            # Archivos a ignorar por Git
+
+
+Mapa de Relaciones de la Base de Datos para FoodExpress
+Este documento presenta un resumen conciso de las relaciones entre las tablas de la base de datos de FoodExpress, utilizando una notación estandarizada para facilitar su comprensión y exportación.
+Convenciones de Relaciones:
+1:1 (Uno a Uno)
+1:N (Uno a Muchos)
+N:M (Muchos a Muchos)
+PK: Clave Primaria
+FK: Clave Foránea
+Relaciones entre Tablas:
+1. users (Usuarios)
+users 1:N addresses
+Descripción: Un usuario puede tener múltiples direcciones de entrega.
+FK: addresses.user_id referencia a users.user_id.
+users 1:1 restaurants
+Descripción: Un usuario con rol de restaurant_admin administra un único restaurante.
+FK: restaurants.admin_user_id referencia a users.user_id (con restricción UNIQUE).
+users 1:N orders
+Descripción: Un cliente (users.role = 'client') puede realizar múltiples pedidos.
+FK: orders.client_user_id referencia a users.user_id.
+2. addresses (Direcciones)
+addresses 1:N orders
+Descripción: Una dirección de entrega puede ser utilizada para múltiples pedidos.
+FK: orders.delivery_address_id referencia a addresses.address_id.
+3. restaurants (Restaurantes)
+restaurants 1:N menu_items
+Descripción: Un restaurante ofrece múltiples elementos en su menú.
+FK: menu_items.restaurant_id referencia a restaurants.restaurant_id.
+restaurants 1:N orders
+Descripción: Un restaurante puede recibir múltiples pedidos.
+FK: orders.restaurant_id referencia a restaurants.restaurant_id.
+restaurants N:M food_categories (a través de restaurant_categories)
+Descripción: Un restaurante puede pertenecer a varias categorías de comida, y una categoría puede agrupar varios restaurantes.
+Tabla de Unión: restaurant_categories
+FKs en restaurant_categories:
+restaurant_categories.restaurant_id referencia a restaurants.restaurant_id.
+restaurant_categories.category_id referencia a food_categories.category_id.
+4. food_categories (Categorías de Comida)
+food_categories N:M restaurants (a través de restaurant_categories)
+Descripción: Una categoría de comida puede agrupar varios restaurantes, y un restaurante puede tener varias categorías.
+Tabla de Unión: restaurant_categories
+FKs en restaurant_categories:
+restaurant_categories.category_id referencia a food_categories.category_id.
+restaurant_categories.restaurant_id referencia a restaurants.restaurant_id.
+5. menu_items (Elementos del Menú)
+menu_items 1:N order_items
+Descripción: Un elemento del menú puede aparecer en múltiples elementos de pedido (en diferentes pedidos).
+FK: order_items.menu_item_id referencia a menu_items.item_id.
+6. orders (Pedidos)
+orders 1:N order_items
+Descripción: Un pedido está compuesto por múltiples elementos de pedido (los productos y sus cantidades).
+FK: order_items.order_id referencia a orders.order_id.
+Este formato permite una revisión rápida de las interconexiones de la base de datos y es fácilmente integrable en cualquier documentación que soporte Markdown.
+
+users (Usuarios):
+users.user_id es la clave primaria.
+Un usuario con role = 'client' puede tener múltiples addresses (uno a muchos: users.user_id -> addresses.user_id).
+Un usuario con role = 'client' puede realizar muchos orders (uno a muchos: users.user_id -> orders.client_user_id).
+Un usuario con role = 'restaurant_admin' gestiona un único restaurant (uno a uno: users.user_id -> restaurants.admin_user_id). La clave foránea admin_user_id en restaurants debe ser única para asegurar esta relación uno a uno.
+addresses (Direcciones):
+addresses.address_id es la clave primaria.
+Cada address pertenece a un user (uno a muchos: users.user_id es FK en addresses).
+Un order se asocia a una address específica de entrega (uno a muchos: addresses.address_id es FK en orders.delivery_address_id).
+restaurants (Restaurantes):
+restaurants.restaurant_id es la clave primaria.
+Cada restaurant es administrado por un user (restaurant_admin) (uno a uno: users.user_id es FK y UNIQUE en restaurants.admin_user_id).
+Un restaurant tiene muchos menu_items (uno a muchos: restaurants.restaurant_id -> menu_items.restaurant_id).
+Un restaurant recibe muchos orders (uno a muchos: restaurants.restaurant_id -> orders.restaurant_id).
+Un restaurant puede pertenecer a muchas food_categories y una food_category puede agrupar muchos restaurants. Esta es una relación de muchos a muchos, resuelta con la tabla de unión restaurant_categories.
+food_categories (Categorías de Comida):
+food_categories.category_id es la clave primaria.
+Relacionada con restaurants a través de restaurant_categories.
+restaurant_categories (Tabla de Unión):
+Esta tabla resuelve la relación de muchos a muchos entre restaurants y food_categories.
+Contiene un par de claves foráneas (restaurant_id y category_id) que juntas forman una clave primaria compuesta.
+menu_items (Ítems del Menú):
+menu_items.item_id es la clave primaria.
+Cada menu_item pertenece a un restaurant (uno a muchos: restaurants.restaurant_id es FK en menu_items).
+Un menu_item puede aparecer en muchos order_items (uno a muchos: menu_items.item_id -> order_items.menu_item_id).
+orders (Pedidos):
+orders.order_id es la clave primaria.
+Cada order es realizado por un client_user (uno a muchos: users.user_id es FK en orders.client_user_id).
+Cada order pertenece a un restaurant (uno a muchos: restaurants.restaurant_id es FK en orders.restaurant_id).
+Cada order tiene una delivery_address específica (uno a muchos: addresses.address_id es FK en orders.delivery_address_id).
+Un order contiene muchos order_items (uno a muchos: orders.order_id -> order_items.order_id).
+order_items (Ítems del Pedido):
+order_items.order_item_id es la clave primaria.
+Cada order_item pertenece a un order (uno a muchos: orders.order_id es FK en order_items).
+Cada order_item hace referencia a un menu_item específico (uno a muchos: menu_items.item_id es FK en order_items). Guarda el unit_price en el momento del pedido para la precisión histórica.
+
+Implementacion
+Checklist Detallado de Tareas para el Proyecto FoodExpress
+Este checklist desglosa las actividades clave para el desarrollo de la aplicación web de gestión de pedidos "FoodExpress", siguiendo una metodología ágil, con un nivel de detalle más granular.
+Fase 1: Planificación y Configuración Inicial
+1.1. Planificación y Definición:
+[ ] 1.1.1. Revisar y confirmar los requisitos funcionales y no funcionales del proyecto:
+[ ] Entender a fondo las necesidades del cliente para cada rol (Cliente, Restaurante, Administrador de Plataforma).
+[ ] Clarificar cualquier ambigüedad en los requisitos de entidades y sus relaciones.
+[ ] Documentar requisitos de rendimiento (tiempos de respuesta), seguridad (autenticación, autorización), y usabilidad.
+[x] 1.1.2. Finalizar el diseño del esquema de la base de datos (tablas, columnas, relaciones):
+[ ] Crear modelos de Sequelizepara la creación de todas las tablas (users, addresses, restaurants, food_categories, restaurant_categories, menu_items, orders, order_items).
+[x] Identificar las funcionalidades esenciales para la primera versión (ej., registro de clientes/restaurantes, búsqueda de restaurantes, visualización de menú, añadir al carrito, realizar pedido, cambio de estado básico por restaurante, seguimiento de pedido por cliente).
+[x] Priorizar las funcionalidades para los primeros sprints.
+[x] 1.1.4. Establecer las herramientas de control de versiones (Git/GitHub):
+[x] Crear el repositorio Git en GitHub (o similar).
+[x] Configurar .gitignore para excluir archivos sensibles y de módulos.
+[x] 1.1.5. Configurar el entorno de desarrollo local (Node.js, MySQL/SQLite):
+[x] Instalar Node.js y npm.
+[x] Instalar MySQL Server (o configurar SQLite si es la opción elegida).
+1.2. Configuración del Proyecto Base:
+[x] 1.2.1. Inicializar el proyecto Node.js (npm init):
+[x] Configurar package.json con información del proyecto y scripts básicos.
+[x] 1.2.2. Instalar dependencias principales:
+[x] npm install express ejs mysql2 dotenv bcryptjs express-session express-validator (o sqlite3 en lugar de mysql2).
+[x] Considerar sequelize y su adaptador de base de datos (npm install sequelize mysql2 o npm install sequelize sqlite3) para el ORM.
+[x] 1.2.3. Configurar el archivo .env para variables de entorno:
+[x] Crear .env y .env.example.
+[x] Añadir variables para puerto, credenciales de DB, secreto de sesión, etc.
+[x] 1.2.4. Crear la estructura de carpetas:
+[x] config/ (para DB, variables de entorno).
+[x] models/ (definiciones de modelos de DB).
+[x] public/ (CSS, JS del cliente, imágenes).
+[x] routes/ (definición de rutas API/web).
+[x] views/ (archivos EJS).
+[x] middleware/ (para funciones de middleware personalizadas).
+[x] 1.2.5. Configurar la conexión inicial a la base de datos (config/db.js):
+[x] Implementar la lógica de conexión a MySQL/SQLite.
+[x] Si se usa Sequelize, configurar la instancia de Sequelize y la conexión.
+Fase 2: Backend - Autenticación y Gestión de Usuarios
+2.1. Modelos de Base de Datos:
+[x] 2.1.1. Crear el modelo User (para users table) con Sequelize/SQL:
+[x] Definir campos: user_id, email, password, role, first_name, last_name, phone_number, created_at, updated_at.
+[x] Establecer validaciones a nivel de modelo (ej., email único).
+[x] 2.1.2. Crear el modelo Address (para addresses table):
+[x] Definir campos: address_id, user_id, street, city, state, zip_code, apt_suite, is_default, created_at.
+[x] Establecer la relación 1:N con User.
+[x] 2.1.3. Implementar el hashing de contraseñas con bcrypt.js en el modelo User:
+[x] Añadir un hook (ej., beforeCreate, beforeUpdate en Sequelize) para hashear la contraseña antes de guardarla.
+[x] Crear un método para comparar contraseñas (ej., comparePassword).
+2.2. Rutas y Controladores de Autenticación:
+[x] 2.2.1. Definir rutas para registro de usuarios (/register):
+[x] GET /register (mostrar formulario).
+[x] POST /register (procesar registro).
+[x] 2.2.2. Definir rutas para inicio de sesión (/login):
+[x] GET /login (mostrar formulario).
+[x] POST /login (procesar inicio de sesión).
+[x] Validar datos de entrada con express-validator (email, password, etc.).
+[x] Verificar si el email ya existe.
+[x] Hashear la contraseña.
+[x] Guardar el nuevo usuario en la base de datos.
+[x] Redirigir o renderizar vista con mensaje de éxito/error.
+[x] Validar credenciales.
+[x] Comparar la contraseña ingresada con la hasheada.
+[x] Si es exitoso, crear una sesión de usuario (req.session.user = { id: user.id, role: user.role }).
+[x] 2.2.5. Implementar rutas para cierre de sesión (/logout):
+[x] Destruir la sesión del usuario (req.session.destroy()).
+[x] Redirigir a la página de inicio o login.
+2.3. Middleware de Autenticación y Autorización:
+[x] 2.3.1. Crear middleware isAuthenticated:
+[x] Verifica si req.session.user existe. Si no, redirige a /login.
+[x] 2.3.2. Crear middleware authorizeRole(roles):
+[x] Recibe un array de roles permitidos.
+[x] Verifica si req.session.user.role está incluido en los roles permitidos. Si no, redirige a una página de "Acceso Denegado" o "403".
+[x] 2.3.3. Proteger rutas específicas con el middleware:
+[x] Rutas de administrador de plataforma: router.get('/admin', authorizeRole(['platform_admin']));
+[x] Rutas de administrador de restaurante: router.get('/restaurant/dashboard', authorizeRole(['restaurant_admin']));
+[x] Rutas de cliente: router.get('/client/profile', authorizeRole(['client']), getProfile);
+Fase 3: Backend - Gestión de Restaurantes y Menús
+3.1. Modelos de Base de Datos:
+[x] 3.1.1. Crear el modelo Restaurant (para restaurants table):
+[x] Definir campos y validaciones.
+[x] Establecer relación 1:1 con User (admin_user_id).
+[x] 3.1.2. Crear el modelo FoodCategory (para food_categories table):
+[x] Definir campos y validaciones.
+[x] 3.1.3. Crear el modelo RestaurantCategory (para restaurant_categories table - tabla de unión):
+[x] Definir claves foráneas y clave primaria compuesta.
+[x] 3.1.4. Crear el modelo MenuItem (para menu_items table):
+[x] Definir campos y validaciones.
+[x] Establecer relación 1:N con Restaurant.
+[x] 3.1.5. Definir las relaciones entre Restaurant, FoodCategory y MenuItem en los modelos:
+[x] Restaurant.hasMany(MenuItem) y MenuItem.belongsTo(Restaurant).
+[x] Restaurant.belongsToMany(FoodCategory, { through: RestaurantCategory }) y viceversa.
+3.2. Rutas y Controladores para Administrador de Plataforma:
+[ ] 3.2.1. Rutas para CRUD de FoodCategory:
+[x] GET /admin/categories (listar).
+[x] GET /admin/categories/new (formulario de creación).
+[x] POST /admin/categories (crear).
+[x] GET /admin/categories/:id/edit (formulario de edición).
+[x] POST /admin/categories/:id (actualizar).
+[x] POST /admin/categories/:id/delete (eliminar).
+[x] Proteger todas estas rutas con authorizeRole(['platform_admin']).
+[ ] 3.2.2. Rutas para gestionar la asignación de FoodCategory a Restaurant:
+[ ] GET /admin/restaurants/:id/categories (mostrar categorías asignadas/disponibles).
+[ ] POST /admin/restaurants/:id/categories (actualizar asignaciones).
+3.3. Rutas y Controladores para Administrador de Restaurante:
+[ ] 3.3.1. Rutas para que el restaurant_admin pueda ver y actualizar la información de su Restaurant:
+[x] GET /restaurant/profile (mostrar perfil del restaurante).
+[ ] POST /restaurant/profile (actualizar perfil).
+[x] Proteger con authorizeRole(['restaurant_admin']).
+[ ] 3.3.2. Rutas para CRUD de MenuItem asociado a su Restaurant:
+[x] GET /restaurant/menu (listar ítems del menú).
+[x] GET /restaurant/menu/new (formulario de creación).
+[x] POST /restaurant/menu (crear).
+[ ] GET /restaurant/menu/:id/edit (formulario de edición).
+[ ] POST /restaurant/menu/:id (actualizar).
+[ ] POST /restaurant/menu/:id/delete (eliminar).
+[ ] Asegurar que solo pueda gestionar ítems de su restaurante.
+[ ] 3.3.3. Implementar validaciones con express-validator para la gestión de restaurantes y menús:
+[ ] Validar campos como nombre, descripción, precio, URLs de imagen.
+[ ] Manejar errores de validación y mostrarlos en las vistas.
+Fase 4: Backend - Proceso de Pedido y Gestión
+4.1. Modelos de Base de Datos:
+[x] 4.1.1. Crear el modelo Order (para orders table):
+[x] Definir campos: order_id, client_user_id, restaurant_id, order_date, delivery_address_id, total_amount, status, payment_status, delivery_notes.
+[x] Establecer relaciones con User (cliente), Restaurant, Address.
+[x] 4.1.2. Crear el modelo OrderItem (para order_items table):
+[x] Definir campos: order_item_id, order_id, menu_item_id, quantity, unit_price.
+[x] Establecer relaciones con Order y MenuItem.
+[x] 4.1.3. Definir las relaciones entre Order, User (cliente), Restaurant y MenuItem en los modelos:
+[x] Order.belongsTo(User) (como cliente).
+[x] Order.belongsTo(Restaurant).
+[x] Order.belongsTo(Address) (para la dirección de entrega).
+[x] Order.hasMany(OrderItem) y OrderItem.belongsTo(Order).
+[x] OrderItem.belongsTo(MenuItem).
+4.2. Rutas y Controladores para Clientes:
+[ ] 4.2.1. Rutas para buscar y filtrar Restaurant:
+[ ] GET /restaurants (listar todos).
+[ ] GET /restaurants?category=X&query=Y (filtrar por categoría, nombre, etc.).
+[ ] 4.2.2. Rutas para ver el menú de un Restaurant específico:
+[ ] GET /restaurants/:id/menu.
+[ ] 4.2.3. Lógica para añadir/eliminar MenuItem al carrito de compra:
+[ ] Utilizar express-session para almacenar el carrito en la sesión del usuario.
+[ ] POST /cart/add (añadir ítem).
+[ ] POST /cart/remove (eliminar ítem).
+[ ] POST /cart/update (actualizar cantidad).
+[ ] 4.2.4. Rutas para el proceso de checkout y creación de Order:
+[ ] GET /checkout (mostrar formulario de checkout con resumen del carrito y direcciones del cliente).
+[ ] POST /checkout/place-order (procesar la creación del pedido).
+[ ] 4.2.5. Lógica para calcular el total_amount del Order automáticamente:
+[ ] Sumar quantity * unit_price para cada OrderItem.
+[ ] Almacenar el unit_price en order_items para mantener la precisión histórica del pedido.
+[ ] 4.2.6. Rutas para ver el estado de sus Order y el historial de pedidos:
+[ ] GET /client/orders (listar todos los pedidos del cliente).
+[ ] GET /client/orders/:id (ver detalles de un pedido específico, incluyendo OrderItems y estado).
+4.3. Rutas y Controladores para Administrador de Restaurante (Pedidos):
+[ ] 4.3.1. Rutas para que el restaurant_admin vea los pedidos entrantes:
+[ ] GET /restaurant/orders (listar pedidos pendientes/en proceso de su restaurante).
+[ ] GET /restaurant/orders/:id (ver detalles de un pedido específico).
+[ ] 4.3.2. Rutas para que el restaurant_admin actualice el status de un Order:
+[ ] POST /restaurant/orders/:id/update-status (ej., de 'pending' a 'accepted', 'preparing', 'ready_for_pickup').
+[ ] Asegurar que solo pueda actualizar pedidos de su restaurante.
+[ ] 4.3.3. Rutas para que el restaurant_admin actualice el payment_status de un Order (si aplica):
+[ ] POST /restaurant/orders/:id/update-payment-status.
+Fase 5: Frontend (Vistas EJS)
+5.1. Vistas de Autenticación:
+[ ] 5.1.1. Crear vista login.ejs:
+[ ] Formulario de email y contraseña.
+[ ] Enlaces a registro y recuperación de contraseña (si aplica).
+[ ] 5.1.2. Crear vista register.ejs:
+[ ] Formulario para registrarse como cliente (nombre, apellido, email, contraseña, teléfono).
+[ ] Opción o enlace para registrarse como administrador de restaurante (posiblemente un formulario separado o con un código de invitación).
+[ ] 5.1.3. Implementar mensajes de error/éxito en las vistas:
+[ ] Mostrar mensajes flash (ej., usando connect-flash) para errores de validación o éxito de operaciones.
+5.2. Vistas Generales:
+[ ] 5.2.1. Crear layout.ejs (plantilla base con header, footer):
+[ ] Incluir CSS y JS globales.
+[ ] Navegación condicional según el estado de autenticación y rol.
+[ ] Placeholder para el contenido principal (<%- body %>).
+[ ] 5.2.2. Crear index.ejs (página de inicio):
+[ ] Sección "Hungry? You're in the right place" con campo de búsqueda.
+[ ] Sección "How It Works" (Search, Choose, Deliver).
+[ ] Enlaces a "Restaurants".
+[ ] 5.2.3. Crear vistas para la lista de restaurantes (restaurants.ejs):
+[ ] Mostrar tarjetas de restaurante (nombre, categorías, calificación, tiempo de entrega).
+[ ] Implementar filtros por categorías de comida y búsqueda por nombre.
+[ ] 5.2.4. Crear vista para el menú de un restaurante (restaurant_menu.ejs):
+[ ] Mostrar información del restaurante.
+[ ] Listar MenuItems con nombre, descripción, precio, imagen.
+[ ] Botones "Añadir al Carrito" para cada ítem.
+[ ] 5.2.5. Crear vista para el carrito de compras (cart.ejs):
+[ ] Listar ítems en el carrito con cantidad, precio unitario y subtotal.
+[ ] Botones para aumentar/disminuir cantidad o eliminar ítem.
+[ ] Mostrar total del carrito.
+[ ] Botón "Proceder al Checkout".
+[ ] 5.2.6. Crear vista para el checkout (checkout.ejs):
+[ ] Resumen del pedido.
+[ ] Selección de dirección de entrega (de las guardadas o nueva).
+[ ] Opciones de pago (ej., "Pago en efectivo").
+[ ] Campo para notas de entrega.
+[ ] Botón "Realizar Pedido".
+5.3. Vistas Específicas del Rol:
+[ ] 5.3.1. Cliente:
+[ ] Dashboard del cliente (client_dashboard.ejs) con enlaces a "Mis Pedidos", "Mis Direcciones".
+[ ] Vista de "Mis Pedidos" (client_orders.ejs) listando pedidos con estado y total.
+[ ] Vista de detalle de pedido (client_order_detail.ejs) mostrando OrderItems y el historial de cambios de estado.
+[ ] 5.3.2. Administrador de Restaurante:
+[ ] Dashboard del restaurante (restaurant_admin_dashboard.ejs) con resumen de pedidos nuevos y enlaces a "Gestionar Menú", "Ver Pedidos".
+[ ] Vista de gestión de menú (restaurant_menu_management.ejs) con CRUD para MenuItems.
+[ ] Vista de lista de pedidos del restaurante (restaurant_orders.ejs) con filtros por estado.
+[ ] Vista de detalle de pedido (restaurant_order_detail.ejs) con opciones para cambiar estado y estado de pago.
+[ ] 5.3.3. Administrador de Plataforma:
+[ ] Dashboard de administración (platform_admin_dashboard.ejs) con enlaces a "Gestionar Usuarios", "Gestionar Restaurantes", "Gestionar Categorías".
+[ ] Vistas para CRUD de usuarios, restaurantes y categorías.
+5.4. Estilos y JavaScript del Cliente:
+[ ] 5.4.1. Crear archivos CSS (public/css/style.css, public/css/responsive.css):
+[ ] Definir estilos para la tipografía, colores, espaciado.
+[ ] Diseñar componentes (botones, tarjetas, formularios).
+[ ] Implementar estilos específicos para diferentes tamaños de pantalla (media queries).
+[ ] 5.4.2. Añadir JavaScript básico (public/js/main.js, public/js/cart.js):
+[ ] Lógica para añadir/eliminar ítems del carrito en el frontend (actualizar UI).
+[ ] Validaciones básicas de formularios en el cliente.
+[ ] Efectos visuales menores o interacciones.
+[ ] 5.4.3. Asegurar un diseño responsivo para todas las vistas:
+[ ] Usar unidades relativas (%, vw, rem).
+[ ] Utilizar Flexbox o Grid para layouts flexibles.
+[ ] Probar en diferentes dispositivos y tamaños de ventana.
+Fase 6: Pruebas y Despliegue
+6.1. Pruebas:
+[ ] 6.1.1. Realizar pruebas unitarias para modelos y controladores (opcional, pero recomendado):
+[ ] Usar frameworks como Mocha o Jest.
+[ ] Probar funciones individuales de los controladores y métodos de los modelos.
+[ ] 6.1.2. Realizar pruebas de integración para el flujo completo:
+[ ] Simular el flujo de un cliente desde el registro hasta la entrega del pedido.
+[ ] Simular el flujo de un administrador de restaurante gestionando pedidos.
+[ ] 6.1.3. Realizar pruebas manuales de todas las funcionalidades desde cada rol de usuario:
+[ ] Crear casos de prueba para cada escenario de usuario.
+[ ] Verificar la usabilidad y la experiencia del usuario.
+[ ] 6.1.4. Probar la validación de formularios:
+[ ] Intentar enviar datos inválidos o incompletos.
+[ ] Verificar que los mensajes de error sean claros y correctos.
+[ ] 6.1.5. Probar la seguridad:
+[ ] Intentar acceder a rutas protegidas sin estar autenticado.
+[ ] Intentar acceder a rutas de otros roles.
+[ ] Probar la inyección de SQL (si no se usa ORM o si se quiere verificar la configuración del ORM).
+[ ] Probar ataques XSS y CSRF.
+6.2. Despliegue:
+[ ] 6.2.1. Configurar el entorno de producción:
+[ ] Crear un archivo .env.production o configurar variables de entorno directamente en el servidor.
+[ ] Deshabilitar el modo de depuración.
+[ ] Optimizar la carga de activos estáticos (CSS, JS).
+[ ] 6.2.2. Desplegar la aplicación en un servidor:
+[ ] Elegir un proveedor de hosting (ej., Heroku, DigitalOcean Droplet, AWS EC2).
+[ ] Subir el código.
+[ ] Instalar dependencias de producción (npm install --production).
+[ ] Iniciar la aplicación Node.js (ej., con pm2 o forever para mantenerla en ejecución).
+[ ] 6.2.3. Configurar el servidor web (ej., Nginx o Apache como proxy inverso, si aplica):
+[ ] Redirigir el tráfico del puerto 80/443 al puerto de la aplicación Node.js.
+[ ] Configurar SSL/TLS para HTTPS.
+[ ] 6.2.4. Configurar la base de datos en el entorno de producción:
+[ ] Crear la base de datos y el usuario con permisos adecuados.
+[ ] Ejecutar los scripts de creación de tablas.
+[ ] Importar datos iniciales (ej., categorías de comida).
+[ ] 6.2.5. Monitoreo y logging:
+[ ] Configurar herramientas de monitoreo para la aplicación y la base de datos.
+[ ] Implementar un sistema de logging para errores y eventos importantes.
+Tareas Continuas / Opcionales (para futuras iteraciones):
+[ ] Integración de pasarela de pago (Stripe, PayPal):
+[ ] Investigación de APIs de pago.
+[ ] Implementación del flujo de pago seguro.
+[ ] Manejo de webhooks para actualizaciones de estado de pago.
+[ ] Notificaciones por email o SMS:
+[ ] Integrar servicios como SendGrid o Twilio para notificaciones de pedido.
+[ ] Módulo de repartidores:
+[ ] Roles y autenticación para repartidores.
+[ ] Interfaz para ver pedidos disponibles y aceptar/rechazar.
+[ ] Actualización de estado de entrega por repartidor.
+[ ] Posiblemente, seguimiento GPS (más complejo).
+[ ] Sistema de reseñas y calificaciones de restaurantes:
+[ ] Modelos para reseñas.
+[ ] Rutas para enviar y mostrar reseñas.
+[ ] Lógica para calcular la calificación promedio del restaurante.
+[ ] Funcionalidad de búsqueda por código postal para restaurantes:
+[ ] Integración con API de geocodificación o base de datos de códigos postales.
+[ ] Lógica para mostrar restaurantes dentro de un radio.
+[ ] Mejoras de UI/UX y animaciones:
+[ ] Transiciones CSS, animaciones.
+[ ] Optimización de la experiencia móvil.
+[ ] Implementación de WebSockets para actualizaciones de estado en tiempo real más fluidas:
+[ ] Usar Socket.IO para notificaciones instantáneas de cambios de estado de pedido.
+
+
+
+

@@ -14,7 +14,26 @@ const decodeToken = (token) => {
     }
 }
 
+const only_users = async (req, res, next) => {
+    try {
+        //check if current session hast token and user information
+        if (!req?.session?.token) {
+            return res.render('login', {
+                session: req.session,
+                errors: 'Access denied, Page for registed users only, please login.'
+            })
+        }
+        next()
+    } catch (error) {
+        console.warning(error.message)
+        res.render('login', {
+            session: req.session,
+            errors: `only_users Error found: ${error.message}`
+        })
+    } 
+}; 
 
+// this will execute always at every request to check session and decode token
 const mw_check_session = async (req, res, next) => {
     try {
         if (req?.session?.token){
@@ -65,5 +84,5 @@ const isAdmin = (req, res, next) => {
 
 
 module.exports = {
-    mw_check_session,isAdmin,decodeToken
+    mw_check_session,isAdmin,decodeToken,only_users
 };

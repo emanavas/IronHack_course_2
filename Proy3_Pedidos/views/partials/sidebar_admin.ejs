@@ -1,0 +1,25 @@
+
+<!-- Sidebar -->
+<div class="sidebar col-lg-3 col-md-12 d-flex flex-column py-3 text-white bg-dark">
+    <div class="p-1">
+    <h5 class="text-center">Admin Panel</h5>
+    <hr class="text-secondary" />
+    <!--view mode on small devices-->
+    <ul class="nav flex-column d-lg-none">
+        <li class="nav-item ">
+            <button class="btn btn-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fas fa-bars me-2"></i>Menu
+            </button>
+        </li>
+
+        <div class="collapse " id="collapseExample">
+            <%- include('./sidebar_admin_content') %>
+        </div>
+        
+    </ul>
+    <!--view mode on large devices-->
+    <ul class="nav flex-column d-none d-lg-block">
+        <%- include('./sidebar_admin_content') %>
+    </ul>
+    </div>
+</div>

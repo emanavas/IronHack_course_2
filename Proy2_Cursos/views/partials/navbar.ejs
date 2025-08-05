@@ -30,18 +30,15 @@
             </li>
           <% } else { %>
             <li class="nav-item">
-              <span class="nav-link text-white">Hi, <%- locals?.token?.name %></span>
+              <a class="nav-link text-white" href="/users/profile">Hi, <%- locals?.token?.name %></a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/perfil">My Area</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/mis-cursos">My courses</a>
+              <a class="nav-link" href="/my-courses">My courses</a>
             </li>
           <% } %>
           <% if (locals?.session?.isAdmin ){ %>
             <li class="nav-item">
-              <a class="nav-link" href="/admin/cursos">Admin</a>
+              <a class="nav-link" href="/admin/">Admin</a>
             </li>
           <% } %>
         </ul>

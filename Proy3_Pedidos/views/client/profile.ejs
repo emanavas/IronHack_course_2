@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile - FoodExpress</title>
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="stylesheet" type="text/css" href="/lib_style.css" />
+
+    <!-- Add favicon-->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <!--bootstrap-->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      .profile-nav .nav-link {
+        color: #6c757d;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+        margin-bottom: 0.5rem;
+      }
+      .profile-nav .nav-link.active {
+        color: #fff;
+        background-color: #dc3545;
+        border-color: #dc3545;
+      }
+      .profile-nav .nav-link:hover {
+        background-color: #f8f9fa;
+      }
+      .btn-details .fa-chevron-down {
+        transition: transform 0.2s ease-in-out;
+      }
+      .btn-details[aria-expanded="true"] .fa-chevron-down {
+        transform: rotate(180deg);
+      }
+      .stepper-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+      }
+      .stepper-item {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 1;
+      }
+      .stepper-item::before {
+        position: absolute;
+        content: "";
+        width: 100%;
+        top: 20px;
+        left: -50%;
+        z-index: 2;
+      }
+      .stepper-item .step-counter {
+        position: relative;
+        z-index: 5;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e0e0e0;
+        margin-bottom: 6px;
+        color: #6c757d;
+      }
+      .stepper-item.completed .step-counter {
+        background-color: #198754;
+        color: white;
+      }
+      .stepper-item:first-child::before {
+        content: none;
+      }
+      .stepper-item:last-child::after {
+        content: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <!-- Navbar -->
+      <%- include('../partials/navbar') %>
+
+      <section class="py-5 bg-light">
+        <div class="container">
+          <h1 class="mb-4">My Account</h1>
+          <div class="row">
+            <div class="col-md-3">
+              <!-- Profile Navigation -->
+              <div
+                class="nav flex-column nav-pills profile-nav"
+                id="v-pills-tab"
+                role="tablist"
+                aria-orientation="vertical"
+              >
+                <button
+                  class="nav-link text-start active"
+                  id="v-pills-orders-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-orders"
+                  type="button"
+                  role="tab"
+                  aria-controls="v-pills-orders"
+                  aria-selected="false"
+                >
+                  <i class="fas fa-receipt me-2"></i>Order History
+                </button>
+                <button
+                  class="nav-link text-start"
+                  id="v-pills-profile-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-profile"
+                  type="button"
+                  role="tab"
+                  aria-controls="v-pills-profile"
+                  aria-selected="true"
+                >
+                  <i class="fas fa-user-edit me-2"></i>Personal Information
+                </button>
+                <button
+                  class="nav-link text-start"
+                  id="v-pills-addresses-tab"
+                  data-bs-toggle="pill"
+                  data-bs-target="#v-pills-addresses"
+                  type="button"
+                  role="tab"
+                  aria-controls="v-pills-addresses"
+                  aria-selected="false"
+                >
+                  <i class="fas fa-map-marker-alt me-2"></i>My Addresses
+                </button>
+              </div>
+            </div>
+            <div class="col-md-9">
+              <!-- Tab Content -->
+              <div class="tab-content" id="v-pills-tabContent">
+                <!-- Order History Tab -->
+                <div
+                  class="tab-pane fade show active"
+                  id="v-pills-orders"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-orders-tab"
+                >
+                  <div class="card">
+                    <div class="card-body p-4">
+                      <h4 class="card-title mb-4">Your Order History</h4>
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>Order ID</th>
+                              <th>Date</th>
+                              <th>Total</th>
+                              <th>Status</th>
+                              <th>Actions</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <% locals?.orders?.forEach((order, index) => { %>
+                            <tr class="align-middle">
+                              <td><strong><%= order.order_id  %></strong></td>
+                              <!--show date and time-->
+                              <td><%= order.createdAt.toLocaleString("en-US")   %></td>
+                              <td>
+                                $<%= typeof order.total_amount === 'number' ?
+                                order.total_amount.toFixed(2) : order.total_amount %>
+                              </td>
+                              <td>
+                                <% if (order.status === 'delivered') { %>
+                                <span class="badge bg-success"
+                                  ><%= order.status %></span>
+                                <% } else if (order.status === 'preparing') {%>
+                                <span class="badge bg-info text-dark"
+                                  ><%= order.status %></span>
+                                <% } else { %>
+                                <span class="badge bg-warning text-dark"
+                                  ><%= order.status %></span>
+                                <% } %>
+                              </td>
+                              <td>
+                                <button
+                                  class="btn btn-sm btn-outline-primary btn-details"
+                                  type="button"
+                                  data-bs-toggle="collapse"
+                                  data-bs-target="#collapseOrder<%= index %>"
+                                  aria-expanded="false"
+                                  aria-controls="collapseOrder<%= index %>"
+                                >
+                                  View Details
+                                  <i class="fas fa-chevron-down"></i>
+                                </button>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan="5" class="p-0" style="border: none">
+                                <div
+                                  id="collapseOrder<%= index %>"
+                                  class="collapse"
+                                >
+                                  <div
+                                    class="card card-body bg-white border-top-0"
+                                  >
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <h5>Items</h5>
+                                        <!-- Placeholder item details -->
+                                        <ul class="list-group list-group-flush">
+                                          <% order.items.forEach(item => { %>
+                                          <li
+                                            class="list-group-item d-flex justify-content-between ps-0"
+                                          >
+                                            <strong><%= item.quantity %>x <%= item.menuItem.name %></strong>
+                                            <strong>$<%= (item.quantity * item.unitPrice).toFixed(2) %></strong>
+                                          </li>
+                                          <% }) %>
+                                        </ul>
+                                        <h5 class="mt-3">Delivery Address</h5>
+                                        <p class="mb-0">
+                                            <%= order.deliveryAddress.street %>, 
+                                            <%= order.deliveryAddress.aptSuite ? order.deliveryAddress.aptSuite + ',' : '' %> 
+                                            <%= order.deliveryAddress.city %>, 
+                                            <%= order.deliveryAddress.state %> 
+                                            <%= order.deliveryAddress.zipCode %>
+                                        </p>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <h5>Order Progress</h5>
+                                        <% const statuses = ['pending', 'preparing', 'delivered']; %>
+                                        <% const currentStatusIndex = statuses.indexOf(order.status); %>
+                                        <div class="stepper-wrapper">
+                                          <% statuses.forEach((status, i) => { %>
+                                            <% let stepperClass = ''; %>
+                                            <% if (i <= currentStatusIndex) stepperClass = 'completed'; %>
+                                            <div class="stepper-item <%= stepperClass %>">
+                                              <div class="step-counter">
+                                                <% if (i <= currentStatusIndex) { %>
+                                                  <i class="fas fa-check"></i>
+                                                <% } else { %>
+                                                  <i class="fas fa-clock"></i>
+                                                <% } %>
+                                              </div>
+                                              <div class="step-name small">
+                                                <%= status %>
+                                              </div>
+                                            </div>
+                                            <% if (i < statuses.length - 1) { %>
+                                              <div class="flex-grow-1" style="position: relative">
+                                                <div style="position: absolute; top: 20px; left: -50%; width: 200%; height: 2px;" class="<%= (i < currentStatusIndex) ? 'bg-success' : 'bg-light' %>"></div>
+                                              </div>
+                                            <% } %>
+                                          <% }) %>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                            <% }) %>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Personal Information Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="v-pills-profile"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-profile-tab"
+                >
+                  <div class="card">
+                    <div class="card-body p-4">
+                      <h4 class="card-title mb-4">Edit Your Information</h4>
+                      <form action="/profile/update" method="POST">
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label for="firstName" class="form-label"
+                              >First Name</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="firstName"
+                              name="firstName"
+                              value="<%= locals.user?.firstName %>"
+                            />
+                          </div>
+                          <div class="col-md-6 mb-3">
+                            <label for="lastName" class="form-label"
+                              >Last Name</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="lastName"
+                              name="lastName"
+                              value="<%= locals.user?.lastName || '' %>"
+                            />
+                          </div>
+                        </div>
+                        <div class="mb-3">
+                          <label for="email" class="form-label"
+                            >Email address</label
+                          >
+                          <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            value="<%= locals.user?.email %>"
+                            readonly
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label for="phoneNumber" class="form-label"
+                            >Phone Number</label
+                          >
+                          <input
+                            type="tel"
+                            class="form-control"
+                            id="phoneNumber"
+                            name="phoneNumber"
+                            value="<%= locals.user?.phoneNumber || '' %>"
+                          />
+                        </div>
+                        <button type="submit" class="btn btn-danger">
+                          Save Changes
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Addresses Tab -->
+                <div
+                  class="tab-pane fade"
+                  id="v-pills-addresses"
+                  role="tabpanel"
+                  aria-labelledby="v-pills-addresses-tab"
+                >
+                  <div class="card">
+                    <div class="card-body p-4">
+                      <h4 class="card-title mb-4">Manage Your Addresses</h4>
+                      <% if (locals.addresses && locals.addresses.length > 0) { %>
+                        <% locals.addresses.forEach(address => { %>
+                        <div class="card mb-3">
+                          <div
+                            class="card-body d-flex justify-content-between align-items-center"
+                          >
+                            <div>
+                              <p class="mb-0">
+                                <%= address.street %>, <%= address.aptSuite ?
+                                address.aptSuite + ',' : '' %> <%= address.city
+                                %>, <%= address.state %> <%= address.zipCode %>
+                              </p>
+                            </div>
+                            <div>
+                              <% if (address.isDefault) { %>
+                              <span class="badge bg-success">Default</span>
+                              <% } else { %>
+                              <button class="btn btn-sm btn-outline-secondary set-default-btn" data-address-id="<%= address.addressId %>">
+                                Set as Default
+                              </button>
+                              <% } %>
+                              <button class="btn btn-sm btn-outline-primary ms-2 edit-address-btn" 
+                                data-bs-toggle="modal" data-bs-target="#editAddressModal"
+                                data-address-id="<%= address.addressId %>"
+                                data-street="<%= address.street %>"
+                                data-aptsuite="<%= address.aptSuite || '' %>"
+                                data-city="<%= address.city %>"
+                                data-state="<%= address.state %>"
+                                data-zipcode="<%= address.zipCode %>"
+                                data-isdefault="<%= address.isDefault %>">
+                                <i class="fas fa-edit"></i> Edit
+                              </button>
+                              <button class="btn btn-sm btn-outline-danger ms-2 delete-address-btn" 
+                                data-bs-toggle="modal" data-bs-target="#deleteAddressModal"
+                                data-address-id="<%= address.addressId %>">
+                                <i class="fas fa-trash"></i> Delete
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                        <% }) %>
+                      <% } else { %>
+                        <p>No addresses found. Add a new address below.</p>
+                      <% } %>
+                      <hr class="my-4" />
+                      <h5 class="mb-3">Add a New Address</h5>
+                      <form action="/client/profile/address/add" method="POST">
+                        <div class="mb-3">
+                          <label for="street" class="form-label">Street</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="street"
+                            name="street"
+                            required
+                          />
+                        </div>
+                        <div class="mb-3">
+                          <label for="aptSuite" class="form-label">Apt/Suite (Optional)</label>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="aptSuite"
+                            name="aptSuite"
+                          />
+                        </div>
+                        <div class="row">
+                          <div class="col-md-6 mb-3">
+                            <label for="city" class="form-label">City</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="city"
+                              name="city"
+                              required
+                            />
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <label for="state" class="form-label">State</label>
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="state"
+                              name="state"
+                              required
+                            />
+                          </div>
+                          <div class="col-md-3 mb-3">
+                            <label for="zipCode" class="form-label"
+                              >Zip Code</label
+                            >
+                            <input
+                              type="text"
+                              class="form-control"
+                              id="zipCode"
+                              name="zipCode"
+                              required
+                            />
+                          </div>
+                        </div>
+                        <button type="submit" class="btn btn-danger">
+                          Add Address
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Edit Address Modal -->
+      <div class="modal fade" id="editAddressModal" tabindex="-1" aria-labelledby="editAddressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editAddressModalLabel">Edit Address</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="editAddressForm" method="POST">
+                <div class="mb-3">
+                  <label for="editStreet" class="form-label">Street</label>
+                  <input type="text" class="form-control" id="editStreet" name="street" required>
+                </div>
+                <div class="mb-3">
+                  <label for="editAptSuite" class="form-label">Apt/Suite (Optional)</label>
+                  <input type="text" class="form-control" id="editAptSuite" name="aptSuite">
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="editCity" class="form-label">City</label>
+                    <input type="text" class="form-control" id="editCity" name="city" required>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <label for="editState" class="form-label">State</label>
+                    <input type="text" class="form-control" id="editState" name="state" required>
+                  </div>
+                  <div class="col-md-3 mb-3">
+                    <label for="editZipCode" class="form-label">Zip Code</label>
+                    <input type="text" class="form-control" id="editZipCode" name="zipCode" required>
+                  </div>
+                </div>
+                <div class="form-check mb-3">
+                  <input class="form-check-input" type="checkbox" value="1" id="editIsDefault" name="isDefault">
+                  <label class="form-check-label" for="editIsDefault">
+                    Set as Default Address
+                  </label>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Delete Address Modal -->
+      <div class="modal fade" id="deleteAddressModal" tabindex="-1" aria-labelledby="deleteAddressModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteAddressModalLabel">Confirm Deletion</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              Are you sure you want to delete this address?
+            </div>
+            <div class="modal-footer">
+              <form id="deleteAddressForm" method="POST">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          // Handle Edit Address Modal
+          const editAddressModal = document.getElementById('editAddressModal');
+          editAddressModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const addressId = button.getAttribute('data-address-id');
+            const street = button.getAttribute('data-street');
+            const aptSuite = button.getAttribute('data-aptsuite');
+            const city = button.getAttribute('data-city');
+            const state = button.getAttribute('data-state');
+            const zipCode = button.getAttribute('data-zipcode');
+            const isDefault = button.getAttribute('data-isdefault') === 'true';
+
+            const form = document.getElementById('editAddressForm');
+            form.action = `/client/profile/address/edit/${addressId}?_method=PUT`;
+
+            document.getElementById('editStreet').value = street;
+            document.getElementById('editAptSuite').value = aptSuite;
+            document.getElementById('editCity').value = city;
+            document.getElementById('editState').value = state;
+            document.getElementById('editZipCode').value = zipCode;
+            document.getElementById('editIsDefault').checked = isDefault;
+          });
+
+          // Handle Delete Address Modal
+          const deleteAddressModal = document.getElementById('deleteAddressModal');
+          deleteAddressModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const addressId = button.getAttribute('data-address-id');
+            const form = document.getElementById('deleteAddressForm');
+            form.action = `/client/profile/address/delete/${addressId}?_method=DELETE`;
+          });
+
+          // Handle Set as Default Button
+          document.querySelectorAll('.set-default-btn').forEach(button => {
+            button.addEventListener('click', async (event) => {
+              const addressId = event.target.dataset.addressId;
+              try {
+                const response = await fetch(`/client/profile/address/set-default/${addressId}`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                });
+                const data = await response.json();
+                if (response.ok) {
+                  alert(data.message);
+                  window.location.reload(); // Reload to reflect changes
+                } else {
+                  alert(data.error || 'Failed to set as default.');
+                }
+              } catch (error) {
+                console.error('Error setting default address:', error);
+                alert('An error occurred while setting default address.');
+              }
+            });
+          });
+        });
+      </script>
+    </main>
+  </body>
+</html>

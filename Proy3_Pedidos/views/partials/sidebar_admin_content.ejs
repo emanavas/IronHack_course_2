@@ -1,0 +1,31 @@
+<li class="nav-item">
+    <a class="nav-link <%= locals.currentPath === '/admin/dashboard' ? 'active' : '' %>" href="/admin/dashboard">
+            <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+    </a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals.currentPath === '/admin/users' ? 'active' : '' %>" href="/admin/users">
+    <i class="fas fa-users me-2"></i>User Management
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals.currentPath === '/admin/restaurants' ? 'active' : '' %>" href="/admin/restaurants">
+    <i class="fas fa-utensils me-2"></i>Restaurant Management
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals.currentPath === '/admin/orders' ? 'active' : '' %>" href="/admin/orders">
+    <i class="fas fa-receipt me-2"></i>Order Overview
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals.currentPath === '/admin/categories' ? 'active' : '' %>" href="/admin/categories">
+    <i class="fas fa-tags me-2"></i>Category Management
+</a>
+</li>
+<li class="nav-item mt-auto">
+<hr class="text-secondary" />
+<a class="nav-link disabled" href="#">
+    <i class="fas fa-cogs me-2"></i>System Settings
+</a>
+</li>

@@ -1,0 +1,30 @@
+<li class="nav-item">
+<a class="nav-link <%= locals?.currentPath === '/restaurant/dashboard' ? 'active' : '' %>" href="/restaurant/dashboard">
+    <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals?.currentPath === '/restaurant/orders' ? 'active' : '' %>" href="/restaurant/orders">
+    <i class="fas fa-receipt me-2"></i>All Orders
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals?.currentPath === '/restaurant/menu' ? 'active' : '' %>" href="/restaurant/menu">
+    <i class="fas fa-utensils me-2"></i>Menu Management
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link <%= locals?.currentPath === '/restaurant/profile' ? 'active' : '' %>" href="/restaurant/profile">
+    <i class="fas fa-store me-2"></i>Restaurant Profile
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link disabled" href="#">
+    <i class="fas fa-star me-2"></i>Reviews
+</a>
+</li>
+<li class="nav-item">
+<a class="nav-link disabled" href="#">
+    <i class="fas fa-chart-line me-2"></i>Analytics
+</a>
+</li>

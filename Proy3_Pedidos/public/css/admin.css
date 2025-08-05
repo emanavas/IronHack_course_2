@@ -1,0 +1,16 @@
+.sidebar {
+    padding-top: 78px; /* Account for the navbar height */
+    background-color: #212529; /* Bootstrap's bg-dark */
+}
+.sidebar .nav-link {
+    color: #adb5bd;
+    transition: background-color 0.2s, color 0.2s;
+}
+.sidebar .nav-link:hover {
+    color: #fff;
+    background-color: #495057;
+}
+.sidebar .nav-link.active {
+    color: #fff;
+    background-color: #0d6efd; /* Using primary blue for active link */
+}

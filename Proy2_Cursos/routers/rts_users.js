@@ -5,11 +5,38 @@ const db = require("#root/config/db.js")
 const { body, validationResult } = require('express-validator');
 const uuid = require('uuid')
 const jwt = require('jsonwebtoken');
+const {only_users} = require("#root/config/middleware.js")
+require('dotenv').config()
+
 
 const { users } = db; // Usar el modelo de Sequelize
 
 
-config.router.post("/api/users/register", 
+
+config.router.get("/profile",only_users, async (req, res) => {
+    try {
+        //get info from token
+        const token = req.session?.token_data
+        const existingUser = await users.findOne({ where: { id: token?.userId } });
+        if (!existingUser) {
+            throw new Error('User not found.');
+        }
+        //render profile
+        res.render('profile', { token: req.session?.token_data,
+            user: existingUser,
+            session: req?.session 
+        });
+    } catch (error) {
+        res.render('profile', { 
+            errors: error.message, 
+            session: req?.session 
+        });
+    }
+})
+
+
+
+config.router.post("/", 
     //validators 
     body('name').notEmpty().trim().isAscii(),
     body('user').notEmpty().trim().isAscii(),
@@ -79,9 +106,6 @@ config.router.post("/api/users/login",
     }
 })
 
-config.router.get("/api/users/logout", async (req, res) => {
-    req.session.destroy();
-    res.redirect('/')
-})
+
 
 module.exports = config.router;
