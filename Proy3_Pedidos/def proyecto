@@ -391,13 +391,13 @@ Fase 3: Backend - Gestión de Restaurantes y Menús
 [x] GET /restaurant/menu (listar ítems del menú).
 [x] GET /restaurant/menu/new (formulario de creación).
 [x] POST /restaurant/menu (crear).
-[ ] GET /restaurant/menu/:id/edit (formulario de edición).
-[ ] POST /restaurant/menu/:id (actualizar).
-[ ] POST /restaurant/menu/:id/delete (eliminar).
+[x] GET /restaurant/menu/:id/edit (formulario de edición).
+[x] POST /restaurant/menu/:id (actualizar).
+[x] POST /restaurant/menu/:id/delete (eliminar).
 [ ] Asegurar que solo pueda gestionar ítems de su restaurante.
 [ ] 3.3.3. Implementar validaciones con express-validator para la gestión de restaurantes y menús:
-[ ] Validar campos como nombre, descripción, precio, URLs de imagen.
-[ ] Manejar errores de validación y mostrarlos en las vistas.
+[x] Validar campos como nombre, descripción, precio, URLs de imagen.
+[x] Manejar errores de validación y mostrarlos en las vistas.
 Fase 4: Backend - Proceso de Pedido y Gestión
 4.1. Modelos de Base de Datos:
 [x] 4.1.1. Crear el modelo Order (para orders table):
@@ -414,28 +414,28 @@ Fase 4: Backend - Proceso de Pedido y Gestión
 [x] OrderItem.belongsTo(MenuItem).
 4.2. Rutas y Controladores para Clientes:
 [ ] 4.2.1. Rutas para buscar y filtrar Restaurant:
-[ ] GET /restaurants (listar todos).
+[x] GET /restaurants (listar todos).
 [ ] GET /restaurants?category=X&query=Y (filtrar por categoría, nombre, etc.).
-[ ] 4.2.2. Rutas para ver el menú de un Restaurant específico:
-[ ] GET /restaurants/:id/menu.
-[ ] 4.2.3. Lógica para añadir/eliminar MenuItem al carrito de compra:
+[x] 4.2.2. Rutas para ver el menú de un Restaurant específico:
+[x] GET /restaurants/:id.
+[x] 4.2.3. Lógica para añadir/eliminar MenuItem al carrito de compra:
 [ ] Utilizar express-session para almacenar el carrito en la sesión del usuario.
-[ ] POST /cart/add (añadir ítem).
-[ ] POST /cart/remove (eliminar ítem).
-[ ] POST /cart/update (actualizar cantidad).
-[ ] 4.2.4. Rutas para el proceso de checkout y creación de Order:
-[ ] GET /checkout (mostrar formulario de checkout con resumen del carrito y direcciones del cliente).
-[ ] POST /checkout/place-order (procesar la creación del pedido).
+[x] POST /cart/add (añadir ítem).
+[x] POST /cart/remove (eliminar ítem).
+[x] POST /cart/update (actualizar cantidad).
+[x] 4.2.4. Rutas para el proceso de checkout y creación de Order:
+[x] GET /checkout (mostrar formulario de checkout con resumen del carrito y direcciones del cliente).
+[x] POST /checkout/place-order (procesar la creación del pedido).
 [ ] 4.2.5. Lógica para calcular el total_amount del Order automáticamente:
-[ ] Sumar quantity * unit_price para cada OrderItem.
-[ ] Almacenar el unit_price en order_items para mantener la precisión histórica del pedido.
+[x] Sumar quantity * unit_price para cada OrderItem.
+[x] Almacenar el unit_price en order_items para mantener la precisión histórica del pedido.
 [ ] 4.2.6. Rutas para ver el estado de sus Order y el historial de pedidos:
-[ ] GET /client/orders (listar todos los pedidos del cliente).
-[ ] GET /client/orders/:id (ver detalles de un pedido específico, incluyendo OrderItems y estado).
+[x] GET /client/orders (listar todos los pedidos del cliente).
+[x] GET /client/orders/:id (ver detalles de un pedido específico, incluyendo OrderItems y estado).
 4.3. Rutas y Controladores para Administrador de Restaurante (Pedidos):
-[ ] 4.3.1. Rutas para que el restaurant_admin vea los pedidos entrantes:
-[ ] GET /restaurant/orders (listar pedidos pendientes/en proceso de su restaurante).
-[ ] GET /restaurant/orders/:id (ver detalles de un pedido específico).
+[x] 4.3.1. Rutas para que el restaurant_admin vea los pedidos entrantes:
+[x] GET /restaurant/orders (listar pedidos pendientes/en proceso de su restaurante).
+[x] GET /restaurant/orders/:id (ver detalles de un pedido específico).
 [ ] 4.3.2. Rutas para que el restaurant_admin actualice el status de un Order:
 [ ] POST /restaurant/orders/:id/update-status (ej., de 'pending' a 'accepted', 'preparing', 'ready_for_pickup').
 [ ] Asegurar que solo pueda actualizar pedidos de su restaurante.
@@ -443,67 +443,64 @@ Fase 4: Backend - Proceso de Pedido y Gestión
 [ ] POST /restaurant/orders/:id/update-payment-status.
 Fase 5: Frontend (Vistas EJS)
 5.1. Vistas de Autenticación:
-[ ] 5.1.1. Crear vista login.ejs:
-[ ] Formulario de email y contraseña.
+[x] 5.1.1. Crear vista login.ejs:
+[x] Formulario de email y contraseña.
 [ ] Enlaces a registro y recuperación de contraseña (si aplica).
-[ ] 5.1.2. Crear vista register.ejs:
-[ ] Formulario para registrarse como cliente (nombre, apellido, email, contraseña, teléfono).
-[ ] Opción o enlace para registrarse como administrador de restaurante (posiblemente un formulario separado o con un código de invitación).
-[ ] 5.1.3. Implementar mensajes de error/éxito en las vistas:
-[ ] Mostrar mensajes flash (ej., usando connect-flash) para errores de validación o éxito de operaciones.
+[x] 5.1.2. Crear vista register.ejs:
+[x] Formulario para registrarse como cliente (nombre, apellido, email, contraseña, teléfono).
+[x] Opción o enlace para registrarse como administrador de restaurante (posiblemente un formulario separado o con un código de invitación).
+[x] 5.1.3. Implementar mensajes de error/éxito en las vistas:
+[x] Mostrar mensajes flash (ej., usando connect-flash) para errores de validación o éxito de operaciones.
 5.2. Vistas Generales:
-[ ] 5.2.1. Crear layout.ejs (plantilla base con header, footer):
-[ ] Incluir CSS y JS globales.
-[ ] Navegación condicional según el estado de autenticación y rol.
+[x] 5.2.1. Crear layout.ejs (plantilla base con header, footer):
+[x] Incluir CSS y JS globales.
+[x] Navegación condicional según el estado de autenticación y rol.
 [ ] Placeholder para el contenido principal (<%- body %>).
-[ ] 5.2.2. Crear index.ejs (página de inicio):
-[ ] Sección "Hungry? You're in the right place" con campo de búsqueda.
-[ ] Sección "How It Works" (Search, Choose, Deliver).
-[ ] Enlaces a "Restaurants".
+[x] 5.2.2. Crear index.ejs (página de inicio):
+[x] Sección "Hungry? You're in the right place" con campo de búsqueda.
+[x] Sección "How It Works" (Search, Choose, Deliver).
+[x] Enlaces a "Restaurants".
 [ ] 5.2.3. Crear vistas para la lista de restaurantes (restaurants.ejs):
-[ ] Mostrar tarjetas de restaurante (nombre, categorías, calificación, tiempo de entrega).
+[x] Mostrar tarjetas de restaurante (nombre, categorías, calificación, tiempo de entrega).
 [ ] Implementar filtros por categorías de comida y búsqueda por nombre.
 [ ] 5.2.4. Crear vista para el menú de un restaurante (restaurant_menu.ejs):
 [ ] Mostrar información del restaurante.
-[ ] Listar MenuItems con nombre, descripción, precio, imagen.
-[ ] Botones "Añadir al Carrito" para cada ítem.
-[ ] 5.2.5. Crear vista para el carrito de compras (cart.ejs):
-[ ] Listar ítems en el carrito con cantidad, precio unitario y subtotal.
-[ ] Botones para aumentar/disminuir cantidad o eliminar ítem.
-[ ] Mostrar total del carrito.
-[ ] Botón "Proceder al Checkout".
+[x] Listar MenuItems con nombre, descripción, precio, imagen.
+[x] Botones "Añadir al Carrito" para cada ítem.
+[x] 5.2.5. Crear vista para el carrito de compras (cart.ejs):
+[x] Listar ítems en el carrito con cantidad, precio unitario y subtotal.
+[x] Botones para aumentar/disminuir cantidad o eliminar ítem.
+[x] Mostrar total del carrito.
+[x] Botón "Proceder al Checkout".
 [ ] 5.2.6. Crear vista para el checkout (checkout.ejs):
-[ ] Resumen del pedido.
+[x] Resumen del pedido.
 [ ] Selección de dirección de entrega (de las guardadas o nueva).
 [ ] Opciones de pago (ej., "Pago en efectivo").
 [ ] Campo para notas de entrega.
-[ ] Botón "Realizar Pedido".
+[x] Botón "Realizar Pedido".
 5.3. Vistas Específicas del Rol:
 [ ] 5.3.1. Cliente:
-[ ] Dashboard del cliente (client_dashboard.ejs) con enlaces a "Mis Pedidos", "Mis Direcciones".
-[ ] Vista de "Mis Pedidos" (client_orders.ejs) listando pedidos con estado y total.
-[ ] Vista de detalle de pedido (client_order_detail.ejs) mostrando OrderItems y el historial de cambios de estado.
+[x] Dashboard del cliente (client_dashboard.ejs) con enlaces a "Mis Pedidos", "Mis Direcciones".
+[x] Vista de "Mis Pedidos" (client_orders.ejs) listando pedidos con estado y total.
+[x] Vista de detalle de pedido (client_order_detail.ejs) mostrando OrderItems y el historial de cambios de estado.
 [ ] 5.3.2. Administrador de Restaurante:
-[ ] Dashboard del restaurante (restaurant_admin_dashboard.ejs) con resumen de pedidos nuevos y enlaces a "Gestionar Menú", "Ver Pedidos".
-[ ] Vista de gestión de menú (restaurant_menu_management.ejs) con CRUD para MenuItems.
-[ ] Vista de lista de pedidos del restaurante (restaurant_orders.ejs) con filtros por estado.
-[ ] Vista de detalle de pedido (restaurant_order_detail.ejs) con opciones para cambiar estado y estado de pago.
+[x] Dashboard del restaurante (restaurant_admin_dashboard.ejs) con resumen de pedidos nuevos y enlaces a "Gestionar Menú", "Ver Pedidos".
+[x] Vista de gestión de menú (restaurant_menu_management.ejs) con CRUD para MenuItems.
+[x] Vista de lista de pedidos del restaurante (restaurant_orders.ejs) con filtros por estado.
+[x] Vista de detalle de pedido (restaurant_order_detail.ejs) con opciones para cambiar estado y estado de pago.
 [ ] 5.3.3. Administrador de Plataforma:
-[ ] Dashboard de administración (platform_admin_dashboard.ejs) con enlaces a "Gestionar Usuarios", "Gestionar Restaurantes", "Gestionar Categorías".
-[ ] Vistas para CRUD de usuarios, restaurantes y categorías.
+[x] Dashboard de administración (platform_admin_dashboard.ejs) con enlaces a "Gestionar Usuarios", "Gestionar Restaurantes", "Gestionar Categorías".
+[x] Vistas para CRUD de usuarios, restaurantes y categorías.
 5.4. Estilos y JavaScript del Cliente:
 [ ] 5.4.1. Crear archivos CSS (public/css/style.css, public/css/responsive.css):
-[ ] Definir estilos para la tipografía, colores, espaciado.
-[ ] Diseñar componentes (botones, tarjetas, formularios).
-[ ] Implementar estilos específicos para diferentes tamaños de pantalla (media queries).
+[x] Diseñar componentes (botones, tarjetas, formularios).
+[x] Implementar estilos específicos para diferentes tamaños de pantalla (media queries).
 [ ] 5.4.2. Añadir JavaScript básico (public/js/main.js, public/js/cart.js):
-[ ] Lógica para añadir/eliminar ítems del carrito en el frontend (actualizar UI).
-[ ] Validaciones básicas de formularios en el cliente.
-[ ] Efectos visuales menores o interacciones.
-[ ] 5.4.3. Asegurar un diseño responsivo para todas las vistas:
-[ ] Usar unidades relativas (%, vw, rem).
-[ ] Utilizar Flexbox o Grid para layouts flexibles.
-[ ] Probar en diferentes dispositivos y tamaños de ventana.
+[x] Lógica para añadir/eliminar ítems del carrito en el frontend (actualizar UI).
+[x] Validaciones básicas de formularios en el cliente.
+[x] 5.4.3. Asegurar un diseño responsivo para todas las vistas:
+[x] Utilizar Flexbox o Grid para layouts flexibles.
+[x] Probar en diferentes dispositivos y tamaños de ventana.
 Fase 6: Pruebas y Despliegue
 6.1. Pruebas:
 [ ] 6.1.1. Realizar pruebas unitarias para modelos y controladores (opcional, pero recomendado):
